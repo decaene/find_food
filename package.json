@@ -1,5 +1,5 @@
 {
-  "name": "codigeek-app",
+  "name": "find_food",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -29,5 +29,17 @@
     "qrcode": "^1.0.0",
     "serve-favicon": "~2.4.5",
     "socket.io": "^2.0.4"
-  }
+  },
+  "main": "findfood.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/decaene/find_food.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/decaene/find_food/issues"
+  },
+  "homepage": "https://github.com/decaene/find_food#readme",
+  "description": ""
 }
