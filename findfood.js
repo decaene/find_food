@@ -21,7 +21,7 @@ var server = app.listen(3002, () => {
 });
 
 // Add Security Headers
- 
+  
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
