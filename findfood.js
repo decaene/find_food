@@ -88,7 +88,7 @@ router.get("/",function(req,res){
 router.post("/nuevo_usuario",function(req,res){
     var collection                  = datb.collection('Usuario');
     var email_register              = req.body.data.email;
-    req.body.data.tipo_uid          = new ObjectId(req.body.data.tipo_uid);
+    req.body.data.tipo_id          = new ObjectId(req.body.data.tipo_id);
 
     collection.find( { "email" : email_register } ).toArray(function(err, result){  
         if(err){
@@ -130,7 +130,7 @@ router.post("/autenticacion",function(req,res){
     var email_login     =  req.body.data.email;
     var password_login  =  req.body.data.contrasena;
 
-    var collection      = datb.collection(name_collection);
+    var collection      = datb.collection('Usuario');
     collection.aggregate([
         { $match : { "email" : email_login, "contrasena" : password_login } },
         { $lookup: { from: "Tipo_Usuario", localField: "tipo_id", foreignField: "_id", as: "tipo_usuario" } }
