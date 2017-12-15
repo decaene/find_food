@@ -180,7 +180,7 @@ router.post("/get_tipo_comida",function(req,res){
             var res_data      = {};
             res_data.status   = "success";
             res_data.message  = "Tipos de comida";
-            res_data.data     = result[0];
+            res_data.data     = result;
             res.send(res_data);
         }
     });
@@ -199,7 +199,7 @@ router.post("/get_detalles_restaurante",function(req,res){
             var res_data      = {};
             res_data.status   = "success";
             res_data.message  = "Detalles Restaurante";
-            res_data.data     = result[0];
+            res_data.data     = result;
             res.send(res_data);
         }
     });
