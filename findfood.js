@@ -20,6 +20,30 @@ var server = app.listen(3002, () => {
     console.log('Find food en:3003');
 });
 
+var io = require('socket.io')(server);
+
+// IO SOCKETS
+
+// Set socket.io listeners.
+io.on('connection', (socket) => {
+    console.log('Usuario esta viendo FindFood');
+
+    socket.on('join', function(data) { //Listen to any join event from connected users
+        socket.user_id = data._id;
+        socket.email   = data.email;
+
+        socket.join(data._id);
+        // socket.join(data._id); User joins a unique room/channel that's named after the userId 
+        // console.log("User joined room: " + data.user_id);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Usuario desconectado de FindFood');
+    });
+});
+
+// IO SOCKETS
+
 // Add Security Headers
   
 app.use(function (req, res, next) {
@@ -44,27 +68,11 @@ app.use(function (req, res, next) {
 
 // Database Mongo Connection //
 
-    var datb;  
-
-    MongoClient.connect('mongodb://127.0.0.1:27017/find_food', function(err, db) {
-        if(err) throw err;
-
-
-        datb = db;
-        // var collection = db.collection('test_insert');
-        // collection.insert({a:2}, function(err, docs) {
-        //     collection.count(function(err, count) {
-        //         console.log(format("count = %s", count));
-        //     });
-        // });
-
-        // Locate all the entries using find
-        // collection.find().toArray(function(err, results) {
-        //     console.dir(results);
-        //     // Let's close the db
-        //     db.close();
-        // });
-    });
+var datb;
+MongoClient.connect('mongodb://127.0.0.1:27017/find_food', function(err, db) {
+    if(err) throw err;
+    datb = db;
+});
 
 // Database Mongo Connection //
 
@@ -77,36 +85,94 @@ router.get("/",function(req,res){
     res.json({"error" : false,"message" : "Hello World11"});
 });
 
-router.get("/test2",function(req,res){
+router.post("/nuevo_usuario",function(req,res){
+    var collection                  = datb.collection('Usuario');
+    var email_register              = req.body.data.email;
+    req.body.data.tipo_uid          = new ObjectId(req.body.data.tipo_uid);
 
-    var request = new Request('sps_Familias', function(err, rowCount) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(rowCount + ' rows');
+    collection.find( { "email" : email_register } ).toArray(function(err, result){  
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            if(result.length === 0){
+                collection.insert(req.body.data, function(err, result) {
+                    if(err){
+                        var res_err      = {};
+                        res_err.status   = "error";
+                        res_err.error    = err;
+                        res_err.message  = err;
+                        res.send(res_err);
+                    }
+                    else{
+                        console.log(result.insertedIds[0]);
+                        result.status = "success";
+                        res.send(result);
+                        // res.send(req.body);
+                    }
+                });
+            }else{
+                var res_err      = {};
+                res_err.status   = "info";
+                res_err.message  = "Este correo electrónico ya fue registrado anteriormente.";
+                res.send(res_err);
+            }
         }
     });
-
-    request.on('row', function(columns) {
-      columns.forEach(function(column) {
-        console.log(column.value);
-      });
-    });
-
-    // request.on("row", function (columns) { 
-    //     var item = {}; 
-    //     columns.forEach(function (column) { 
-    //         item[column.metadata.colName] = column.value; 
-    //     }); 
-    //     result.push(item); 
-    // }); 
-
-    my_connection.callProcedure(request);
-
 });
 
-router.post("/get_data",function(req,res){
-	res.json({"tst" : true,"message" : my_connection});
+router.post("/autenticacion",function(req,res){
+    var name_collection = "Usuario";
+    var email_login     =  req.body.data.email;
+    var password_login  =  req.body.data.contrasena;
+
+    var collection      = datb.collection(name_collection);
+    collection.aggregate([
+        { $match : { "email" : email_login, "contrasena" : password_login } },
+        { $lookup: { from: "Tipo_Usuario", localField: "tipo_id", foreignField: "_id", as: "tipo_usuario" } }
+    ]).toArray(function(err, result){  
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        if(result.length === 0){
+            var res_err      = {};
+            res_err.status   = "info";
+            res_err.message  = "Correo electrónico o contraseña equivocada.";
+            res.send(res_err);
+        }else{
+            if(result[0].status != 1){
+                var res_data      = {};
+                res_data.status   = "info";
+                res_data.message  = "Tu cuenta esta inactiva, para mas información contacta soporte.";
+                res_data.data     = result[0];
+                res.send(res_data);
+            }else{
+
+                collection.update(
+                    { '_id' : result[0]._id }, 
+                    { $set: { 'registration_id'  : registration_id
+                            } 
+                    }, 
+                    function(err, result){  
+                        // No return
+                });
+
+                var res_data      = {};
+                res_data.status   = "success";
+                res_data.message  = "Bienvenido a FindFood. ¡Disfruta tu comida!";
+                res_data.data     = result[0];
+                res.send(res_data);
+            }
+        }
+    });
 });
 
 app.use('/',router);
