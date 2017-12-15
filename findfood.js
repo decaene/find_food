@@ -155,16 +155,6 @@ router.post("/autenticacion",function(req,res){
                 res_data.data     = result[0];
                 res.send(res_data);
             }else{
-
-                collection.update(
-                    { '_id' : result[0]._id }, 
-                    { $set: { 'registration_id'  : registration_id
-                            } 
-                    }, 
-                    function(err, result){  
-                        // No return
-                });
-
                 var res_data      = {};
                 res_data.status   = "success";
                 res_data.message  = "Bienvenido a FindFood. ¡Disfruta tu comida!";
