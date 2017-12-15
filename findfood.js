@@ -168,7 +168,7 @@ router.post("/autenticacion",function(req,res){
 router.post("/get_tipo_comida",function(req,res){
     var collection      = datb.collection('Tipo_Comida');
     collection.aggregate([
-        { $orderby : { "descripcion" : -1 } }
+        { $sort: : { "descripcion" : 1 } }
     ]).toArray(function(err, result){  
         if(err){
             var res_err      = {};
