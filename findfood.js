@@ -9,6 +9,8 @@ var mongoose    =   require('mongoose');
 var MongoClient =   require('mongodb').MongoClient
     , format    =   require('util').format;
 var ObjectId    =   require('mongodb').ObjectId; 
+var path        =   require('path');
+var multer      =   require('multer');
 // var dateFormat  =   require('dateformat');
 // var moment      =   require('moment');
 // var QRCode      =   require('qrcode');
@@ -204,5 +206,27 @@ router.post("/get_detalles_restaurante",function(req,res){
         }
     });
 });
+
+router.post("/api/Upload", function(req, res) {
+     upload(req, res, function(err) {
+         if (err) {
+             return res.end("Something went wrong!");
+         }
+         return res.end("File uploaded sucessfully!.");
+     });
+});
+
+var Storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, "./Images");
+    },
+    filename: function(req, file, callback) {
+        callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+    }
+});
+
+var upload = multer({
+    storage: Storage
+}).array("imgUploader", 3); //Field name and max count
 
 app.use('/',router);
