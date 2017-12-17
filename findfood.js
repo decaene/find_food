@@ -207,29 +207,23 @@ router.post("/get_detalles_restaurante",function(req,res){
     });
 });
 
-router.post("/api/Upload", function(req, res) {
-    console.log(req);
-     upload(req, res, function(err) {
-         if (err) {
-             return res.end("Something went wrong!");
-         }
-         return res.end("File uploaded sucessfully!.");
-     });
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, './uploads');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
 });
+var upload = multer({ storage : storage}).single('userPhoto');
 
-var Storage = multer.diskStorage({
-    destination: function(req, file, callback) {
-        console.log("Test1");
-        callback(null, "/Images");
-    },
-    filename: function(req, file, callback) {
-        console.log("Test2");
-        callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
-    }
+app.post('/api/photo',function(req,res){
+    upload(req,res,function(err) {
+        if(err) {
+            return res.end("Error uploading file.");
+        }
+        res.end("File is uploaded");
+    });
 });
-
-var upload = multer({
-    storage: Storage
-}).array("imgUploader", 3); //Field name and max count
 
 app.use('/',router);
