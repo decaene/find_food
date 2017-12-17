@@ -208,6 +208,7 @@ router.post("/get_detalles_restaurante",function(req,res){
 });
 
 router.post("/api/Upload", function(req, res) {
+    console.log(req);
      upload(req, res, function(err) {
          if (err) {
              return res.end("Something went wrong!");
@@ -218,9 +219,11 @@ router.post("/api/Upload", function(req, res) {
 
 var Storage = multer.diskStorage({
     destination: function(req, file, callback) {
-        callback(null, "./Images");
+        console.log("Test1");
+        callback(null, "/Images");
     },
     filename: function(req, file, callback) {
+        console.log("Test2");
         callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
     }
 });
