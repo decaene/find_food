@@ -17,6 +17,7 @@
     "ejs": "^2.5.7",
     "email-templates": "^3.1.8",
     "express": "^4.16.2",
+    "finalhandler": "^1.1.0",
     "jade": "~1.11.0",
     "jwt-simple": "^0.5.1",
     "kerberos": "~0.0.17",
@@ -31,6 +32,7 @@
     "pug": "^2.0.0-rc.4",
     "qrcode": "^1.0.0",
     "serve-favicon": "~2.4.5",
+    "serve-static": "^1.13.1",
     "socket.io": "^2.0.4"
   },
   "main": "findfood.js",
