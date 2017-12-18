@@ -215,12 +215,11 @@ router.post("/get_detalles_restaurante",function(req,res){
 });
 
 router.post("/get_restaurantes_usuario",function(req,res){
-    var usuario_id       =  ObjectId(req.body.data._id);
-    console.log(usuario_id);
+    console.log(ObjectId(req.body.data._id);
     var collection       =  datb.collection("Restaurante");
     collection.aggregate([
         { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "menu" } },
-        { $match:  { "usuario_id" : usuario_id } }
+        { $match:  { "usuario_id" : ObjectId(req.body.data._id) } }
     ]).toArray(function(err, result){ 
         if(err){
             var res_err      = {};
