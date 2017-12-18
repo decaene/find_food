@@ -229,7 +229,11 @@ router.post("/get_restaurantes_usuario",function(req,res){
             res.send(res_err);
         }
         else{
-            res.send(result);
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Restaurantes";
+            res_data.data     = result;
+            res.send(res_data);
         }
     });
 });
