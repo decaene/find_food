@@ -12,11 +12,16 @@ var ObjectId    =   require('mongodb').ObjectId;
 var path        =   require('path');
 var multer      =   require('multer');
 var fs          =   require('fs');
+var bodyParser  =   require('body-parser');
 // var dateFormat  =   require('dateformat');
 // var moment      =   require('moment');
 // var QRCode      =   require('qrcode');
 // var gcm         =   require('node-gcm');
 // var apn         =   require('apn');
+
+app.use(bodyParser({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb'}));
+app.use(bodyParser());
 
 // Run server to listen on port 3001.
 var server = app.listen(3003, () => {
