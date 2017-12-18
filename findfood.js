@@ -212,7 +212,7 @@ router.post("/nuevo_restaurante",function(req,res){
     var collection       =  datb.collection('Restaurante');
     var restaurante      =  req.body.data;
     var foto_restaurante =  req.body.data.foto;
-    var restaurante.foto =  "";
+    restaurante.foto     =  "";
     collection.insert(restaurante, function(err, result) {
         if(err){
             var res_err      = {};
