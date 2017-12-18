@@ -230,7 +230,7 @@ router.post("/nuevo_restaurante",function(req,res){
             console.log(result.insertedIds[0]);
             var data = foto_restaurante.replace(/^data:image\/\w+;base64,/, "");
             var buf = new Buffer(data, 'base64');
-            fs.writeFile(result.insertedIds[0]+'_foto.png', buf);
+            fs.writeFile('test_images/'+result.insertedIds[0]+'_foto.png', buf);
             result.status = "success";
             res.send(result);
             // res.send(req.body);
