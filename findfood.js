@@ -11,6 +11,7 @@ var MongoClient =   require('mongodb').MongoClient
 var ObjectId    =   require('mongodb').ObjectId; 
 var path        =   require('path');
 var multer      =   require('multer');
+var fs          =   require('fs');
 // var dateFormat  =   require('dateformat');
 // var moment      =   require('moment');
 // var QRCode      =   require('qrcode');
@@ -208,8 +209,11 @@ router.post("/get_detalles_restaurante",function(req,res){
 });
 
 router.post("/nuevo_restaurante",function(req,res){
-    var collection                  = datb.collection('Restaurante');
-    collection.insert(req.body.data, function(err, result) {
+    var collection       =  datb.collection('Restaurante');
+    var restaurante      =  req.body.data;
+    var foto_restaurante =  req.body.data.foto;
+    var restaurante.foto =  "";
+    collection.insert(restaurante, function(err, result) {
         if(err){
             var res_err      = {};
             res_err.status   = "error";
@@ -219,6 +223,9 @@ router.post("/nuevo_restaurante",function(req,res){
         }
         else{
             console.log(result.insertedIds[0]);
+            var data = foto_restaurante.replace(/^data:image\/\w+;base64,/, "");
+            var buf = new Buffer(data, 'base64');
+            fs.writeFile(result.insertedIds[0]+'_foto.png', buf);
             result.status = "success";
             res.send(result);
             // res.send(req.body);
