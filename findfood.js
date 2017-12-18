@@ -213,13 +213,34 @@ router.post("/get_detalles_restaurante",function(req,res){
     });
 });
 
+router.post("/get_restaurantes_usuario",function(req,res){
+    var usuario_id       =  ObjectId(req.body.data._id);
+    var collection       =  datb.collection("Restaurante");
+    collection.aggregate([
+        { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "menu" } },
+        { $match:  { "usuario_id" : usuario_id } }
+    ]).toArray(function(err, result){ 
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            res.send(result);
+        }
+    });
+});
+
 router.post("/nuevo_restaurante",function(req,res){
-    var collection       =  datb.collection('Restaurante');
-    var restaurante      =  req.body.data;
-    var foto_restaurante =  req.body.data.foto;
-    var menu             =  req.body.data.menu;
-    restaurante.foto     =  "";
-    restaurante.menu     =  [];
+    var collection           =  datb.collection('Restaurante');
+    var restaurante          =  req.body.data;
+    var foto_restaurante     =  req.body.data.foto;
+    var menu                 =  req.body.data.menu;
+    restaurante.foto         =  "";
+    restaurante.menu         =  [];
+    restaurante.usuario_id   =  ObjectId(req.body.data.usuario_id);
     collection.insert(restaurante, function(err, result) {
         if(err){
             var res_err      = {};
