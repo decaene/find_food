@@ -1,59 +1,56 @@
-const http = require('http');
-const url = require('url');
-const fs = require('fs');
-const path = require('path');
-const port = process.argv[2] || 9000;
+var http = require('http');
+var fs = require('fs');
+var path = require('path');
 
-http.createServer(function (req, res) {
-  console.log(`${req.method} ${req.url}`);
+http.createServer(function (request, response) {
+    console.log('request starting...');
 
-  // parse URL
-  const parsedUrl = url.parse(req.url);
-  // extract URL path
-  let pathname = `.${parsedUrl.pathname}`;
-  // based on the URL path, extract the file extention. e.g. .js, .doc, ...
-  const ext = path.parse(pathname).ext;
-  // maps file extention to MIME typere
-  const map = {
-    '.ico': 'image/x-icon',
-    '.html': 'text/html',
-    '.js': 'text/javascript',
-    '.json': 'application/json',
-    '.css': 'text/css',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.wav': 'audio/wav',
-    '.mp3': 'audio/mpeg',
-    '.svg': 'image/svg+xml',
-    '.pdf': 'application/pdf',
-    '.doc': 'application/msword'
-  };
+    var filePath = '.' + request.url;
+    if (filePath == './')
+        filePath = './index.html';
 
-  fs.exists(pathname, function (exist) {
-    if(!exist) {
-      // if the file is not found, return 404
-      res.statusCode = 404;
-      res.end(`File ${pathname} not found!`);
-      return;
+    var extname = path.extname(filePath);
+    var contentType = 'text/html';
+    switch (extname) {
+        case '.js':
+            contentType = 'text/javascript';
+            break;
+        case '.css':
+            contentType = 'text/css';
+            break;
+        case '.json':
+            contentType = 'application/json';
+            break;
+        case '.png':
+            contentType = 'image/png';
+            break;      
+        case '.jpg':
+            contentType = 'image/jpg';
+            break;
+        case '.wav':
+            contentType = 'audio/wav';
+            break;
     }
 
-    // if is a directory search for index file matching the extention
-    if (fs.statSync(pathname).isDirectory()) pathname += '/uploads' + ext;
-
-    // read file from file system
-    fs.readFile(pathname, function(err, data){
-      if(err){
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        // if the file is found, set Content-type and send data
-        res.setHeader('Content-type', map[ext] || 'text/plain' );
-        res.end(data);
-      }
+    fs.readFile(filePath, function(error, content) {
+        if (error) {
+            if(error.code == 'ENOENT'){
+                fs.readFile('./404.html', function(error, content) {
+                    response.writeHead(200, { 'Content-Type': contentType });
+                    response.end(content, 'utf-8');
+                });
+            }
+            else {
+                response.writeHead(500);
+                response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
+                response.end(); 
+            }
+        }
+        else {
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.end(content, 'utf-8');
+        }
     });
-  });
 
-
-}).listen(parseInt(port));
-
-console.log(`Server listening on port ${port}`);
+}).listen(8125);
+console.log('Server running at http://127.0.0.1:8125/');
