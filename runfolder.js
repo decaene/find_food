@@ -1,10 +1,11 @@
-var express = require('express')  
-var serveStatic = require('serve-static')
+var util = require('util'),  
+    http = require('http');
 
-var staticBasePath = '/var/lib/jenkins/workspace/Find_Food';
+http.createServer(function (req, res) {  
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.write('hello, i know nodejitsu.')
+  res.end();
+}).listen(8082);
 
-var app = express()
-
-app.use(serveStatic(staticBasePath, {'index': false}));
-app.listen(3010);
-console.log('Listening on port 3010.');
+/* server started */  
+util.puts('> hello world running on port 8000');  
