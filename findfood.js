@@ -207,6 +207,25 @@ router.post("/get_detalles_restaurante",function(req,res){
     });
 });
 
+router.post("/nuevo_restaurante",function(req,res){
+    var collection                  = datb.collection('Restaurante');
+    collection.insert(req.body.data, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            console.log(result.insertedIds[0]);
+            result.status = "success";
+            res.send(result);
+            // res.send(req.body);
+        }
+    });
+});
+
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, './uploads');
