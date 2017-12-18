@@ -18,6 +18,7 @@
     "email-templates": "^3.1.8",
     "express": "^4.16.2",
     "finalhandler": "^1.1.0",
+    "forever": "^0.15.3",
     "jade": "~1.11.0",
     "jwt-simple": "^0.5.1",
     "kerberos": "~0.0.17",
