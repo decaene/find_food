@@ -3,7 +3,7 @@ var http = require('http'),
     fs = require('fs'),
     path = require('path'),
     url = require('url');
-    imageDir = 'Images/';
+    imageDir = 'testimages/';
  
 //create http server listening on port 3333
 http.createServer(function (req, res) {
