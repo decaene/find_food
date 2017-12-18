@@ -215,6 +215,7 @@ router.post("/get_detalles_restaurante",function(req,res){
 
 router.post("/get_restaurantes_usuario",function(req,res){
     var usuario_id       =  ObjectId(req.body.data._id);
+    console.log(usuario_id);
     var collection       =  datb.collection("Restaurante");
     collection.aggregate([
         { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "menu" } },
