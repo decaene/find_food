@@ -1,9 +1,11 @@
-var connect = require('connect'),
-    directory = '/var/lib/jenkins/workspace/Find_Food',
-    serveStatic = require('serve-static');
+var express = require('express')
+  , app = express.createServer();
 
-var app = connect();
-
-app.use(serveStatic(directory));
+app.configure(function() {
+  var hourMs = 1000*60*60;
+  app.use(express.static(__dirname + '/public', { maxAge: hourMs }));
+  app.use(express.directory(__dirname + '/public'));
+  app.use(express.errorHandler());
+});
 app.listen(3010);
 console.log('Listening on port 3010.');
