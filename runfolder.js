@@ -1,8 +1,9 @@
 var connect = require('connect'),
-    directory = '/var/lib/jenkins/workspace/Find_Food';
+    directory = '/var/lib/jenkins/workspace/Find_Food',
+    serveStatic = require('serve-static');
 
-connect()
-    .use(connect.static(directory))
-    .listen(3010);
+var app = connect();
 
+app.use(serveStatic(directory));
+app.listen(3010);
 console.log('Listening on port 3010.');
