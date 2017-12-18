@@ -217,7 +217,9 @@ router.post("/nuevo_restaurante",function(req,res){
     var collection       =  datb.collection('Restaurante');
     var restaurante      =  req.body.data;
     var foto_restaurante =  req.body.data.foto;
+    var menu             =  req.body.data.menu;
     restaurante.foto     =  "";
+    restaurante.menu     =  [];
     collection.insert(restaurante, function(err, result) {
         if(err){
             var res_err      = {};
@@ -230,10 +232,58 @@ router.post("/nuevo_restaurante",function(req,res){
             console.log(result.insertedIds[0]);
             var data = foto_restaurante.replace(/^data:image\/\w+;base64,/, "");
             var buf = new Buffer(data, 'base64');
-            fs.writeFile('test_images/'+result.insertedIds[0]+'_foto.png', buf);
-            result.status = "success";
-            res.send(result);
-            // res.send(req.body);
+            fs.writeFile('restaurantes/'+result.insertedIds[0]+'_foto.png', buf);
+
+            collection.update(
+                { '_id' : ObjectId(result.insertedIds[0]) }, 
+                { $set: { 'foto' : 'restaurantes/'+result.insertedIds[0]+'_foto.png' } }, 
+                function(err, result2){  
+                    if(err){
+                        var res_err      = {};
+                        res_err.status   = "error";
+                        res_err.error    = err;
+                        res_err.message  = err;
+                        res.send(res_err);
+                    }
+                    else{
+                        collection       =  datb.collection('Menu');
+                        for(var i = 0; i<menu.length; i++){
+                            menu[i].restaurante_id   = ObjectId(result.insertedIds[0]);
+                            var menu_foto            = menu[i].foto;
+                            menu[i]._foto            = "";
+                            collection.insert(menu[i], function(err, result3) {
+                                if(err){
+                                    var res_err      = {};
+                                    res_err.status   = "error";
+                                    res_err.error    = err;
+                                    res_err.message  = err;
+                                    res.send(res_err);
+                                }
+                                else{
+                                    console.log(result3.insertedIds[0]);
+                                    var data = menu_foto.replace(/^data:image\/\w+;base64,/, "");
+                                    var buf = new Buffer(data, 'base64');
+                                    fs.writeFile('menus/'+result.insertedIds[0]+'_foto.png', buf);
+
+                                    collection.update(
+                                        { '_id' : ObjectId(result3.insertedIds[0]) }, 
+                                        { $set: { 'foto' : 'menus/'+result.insertedIds[0]+'_foto.png' } }, 
+                                        function(err, result4){  
+                                            if(err){
+                                                var res_err      = {};
+                                                res_err.status   = "error";
+                                                res_err.error    = err;
+                                                res_err.message  = err;
+                                                res.send(res_err);
+                                            }
+                                    });
+                                }
+                            });
+                        }
+                        result.status = "success";
+                        res.send(result);
+                    }
+            });
         }
     });
 });
