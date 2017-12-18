@@ -1,41 +1,55 @@
-var app = express();
-var dir =  process.cwd();
-app.use(express.static(dir)); //current working directory
-app.use(express.static(__dirname)); //module directory
-var server = http.createServer(app);
-
-app.get('/files', function(req, res) {
- var currentDir =  dir;
- var query = req.query.path || '';
- if (query) currentDir = path.join(dir, query);
- console.log("browsing ", currentDir);
- fs.readdir(currentDir, function (err, files) {
-     if (err) {
-        throw err;
-      }
-      var data = [];
-      files
-      .forEach(function (file) {
-        try {
-                //console.log("processingile);
-                var isDirectory = fs.statSync(path.join(currentDir,file)).isDirectory();
-                if (isDirectory) {
-                  data.push({ Name : file, IsDirectory: true, Path : path.join(query, file)  });
-                } else {
-                  var ext = path.extname(file);
-                  if(program.exclude && _.contains(program.exclude, ext)) {
-                    console.log("excluding file ", file);
-                    return;
-                  }       
-                  data.push({ Name : file, Ext : ext, IsDirectory: false, Path : path.join(query, file) });
-                }
-
-        } catch(e) {
-          console.log(e); 
-        }        
-        
-      });
-      data = _.sortBy(data, function(f) { return f.Name });
-      res.json(data);
-  });
-});
+//include http, fs and url module
+var http = require('http'),
+    fs = require('fs'),
+    path = require('path'),
+    url = require('url');
+    imageDir = 'Images/';
+ 
+//create http server listening on port 3333
+http.createServer(function (req, res) {
+    //use the url to parse the requested url and get the image name
+    var query = url.parse(req.url,true).query;
+        pic = query.image;
+ 
+    if (typeof pic === 'undefined') {
+        getImages(imageDir, function (err, files) {
+            var imageLists = '<ul>';
+            for (var i=0; i<files.length; i++) {
+                imageLists += '<li><a href="/?image=' + files[i] + '">' + files[i] + '</li>';
+            }
+            imageLists += '</ul>';
+            res.writeHead(200, {'Content-type':'text/html'});
+            res.end(imageLists);
+        });
+    } else {
+        //read the image using fs and send the image content back in the response
+        fs.readFile(imageDir + pic, function (err, content) {
+            if (err) {
+                res.writeHead(400, {'Content-type':'text/html'})
+                console.log(err);
+                res.end("No such image");    
+            } else {
+                //specify the content type in the response will be an image
+                res.writeHead(200,{'Content-type':'image/jpg'});
+                res.end(content);
+            }
+        });
+    }
+ 
+}).listen(3333);
+console.log("Server running at http://localhost:3333/");
+ 
+//get the list of jpg files in the image dir
+function getImages(imageDir, callback) {
+    var fileType = '.jpg',
+        files = [], i;
+    fs.readdir(imageDir, function (err, list) {
+        console.log(imageDir);
+        for(i=0; i<list.length; i++) {
+            if(path.extname(list[i]) === fileType) {
+                files.push(list[i]); //store the file name into the array files
+            }
+        }
+        callback(err, files);
+    });
+}
