@@ -238,6 +238,28 @@ router.post("/get_restaurantes_usuario",function(req,res){
     });
 });
 
+router.post("/get_restaurantes_feed",function(req,res){
+    var collection       =  datb.collection("Restaurante");
+    collection.aggregate([
+        { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "menu" } }
+    ]).toArray(function(err, result){ 
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Restaurantes";
+            res_data.data     = result;
+            res.send(res_data);
+        }
+    });
+});
+
 router.post("/nuevo_restaurante",function(req,res){
     var collection           =  datb.collection('Restaurante');
     var restaurante          =  req.body.data;
