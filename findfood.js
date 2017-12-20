@@ -23,6 +23,13 @@ app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
 app.use(bodyParser());
 
+app.configure(function() {
+  var hourMs = 1000*60*60;
+  app.use(express.static(__dirname + '/public', { maxAge: hourMs }));
+  app.use(express.directory(__dirname + '/public'));
+  app.use(express.errorHandler());
+});
+
 // Run server to listen on port 3001.
 var server = app.listen(3003, () => {
     console.log('Find food en:3003');
