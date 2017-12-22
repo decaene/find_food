@@ -23,12 +23,12 @@ app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
 app.use(bodyParser());
 
-app.configure(function() {
-  var hourMs = 1000*60*60;
-  app.use(express.static(__dirname + '/public', { maxAge: hourMs }));
-  app.use(express.directory(__dirname + '/public'));
-  app.use(express.errorHandler());
-});
+// app.configure(function() {
+  // var hourMs = 1000*60*60;
+  // app.use(express.static(__dirname + '/public', { maxAge: hourMs }));
+  // app.use(express.directory(__dirname + '/public'));
+  // app.use(express.errorHandler());
+// });
 
 // Run server to listen on port 3001.
 var server = app.listen(3003, () => {
@@ -196,6 +196,27 @@ router.post("/get_tipo_comida",function(req,res){
             var res_data      = {};
             res_data.status   = "success";
             res_data.message  = "Tipos de comida";
+            res_data.data     = result;
+            res.send(res_data);
+        }
+    });
+});
+
+router.post("/get_categoria_platillo",function(req,res){
+    var collection      = datb.collection('Categoria_Platillo');
+    collection.aggregate([
+        { $sort : { "descripcion" : 1 } }
+    ]).toArray(function(err, result){  
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }else{
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Categoria platillo";
             res_data.data     = result;
             res.send(res_data);
         }
