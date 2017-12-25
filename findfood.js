@@ -23,8 +23,8 @@ app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
 app.use(bodyParser());
 
-app.use('/img_platillos', express.static('menus'));
-app.use('/img_restaurantes', express.static('restaurantes'));
+app.use('/menus', express.static('menus'));
+app.use('/restaurantes', express.static('restaurantes'));
 
 // app.configure(function() {
   // var hourMs = 1000*60*60;
