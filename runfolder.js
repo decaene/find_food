@@ -2,7 +2,6 @@
 var express = require('express');
 var app = express();
 
-app.use(express.static('menus'));
-app.use(express.static('restaurantes'));
+app.use('/static', express.static('menus'));
 
 var server = app.listen(5000);
