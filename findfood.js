@@ -23,6 +23,9 @@ app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
 app.use(bodyParser());
 
+app.use('/img_platillos', express.static('menus'));
+app.use('/img_restaurantes', express.static('restaurantes'));
+
 // app.configure(function() {
   // var hourMs = 1000*60*60;
   // app.use(express.static(__dirname + '/public', { maxAge: hourMs }));
