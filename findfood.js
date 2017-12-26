@@ -370,10 +370,11 @@ router.post("/nuevo_restaurante",function(req,res){
 });
 
 router.post("/nueva_promocion",function(req,res){
-    var collection           =  datb.collection('Promocion');
-    var promocion            =  req.body.data;
-    var foto_promocion       =  req.body.data.foto;
-    promocion.foto         	 =  "";
+    var collection           		=  datb.collection('Promocion');
+    var promocion           		=  req.body.data;
+    var foto_promocion       		=  req.body.data.foto;
+    promocion.foto         	 		=  "";
+	req.body.data.restaurante_id 	=  req.body.data.restaurante_id;
     collection.insert(promocion, function(err, result) {
         if(err){
             var res_err      = {};
@@ -410,10 +411,11 @@ router.post("/nueva_promocion",function(req,res){
 });
 
 router.post("/nueva_publicacion",function(req,res){
-    var collection           =  datb.collection('Publicacion');
-    var publicacion          =  req.body.data;
-    var foto_publicacion     =  req.body.data.foto;
-    publicacion.foto         =  "";
+    var collection           		=  datb.collection('Publicacion');
+    var publicacion          		=  req.body.data;
+    var foto_publicacion     		=  req.body.data.foto;
+    publicacion.foto         		=  "";
+	req.body.data.restaurante_id 	=  req.body.data.restaurante_id;
     collection.insert(publicacion, function(err, result) {
         if(err){
             var res_err      = {};
