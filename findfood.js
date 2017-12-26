@@ -250,8 +250,8 @@ router.post("/get_restaurantes_usuario",function(req,res){
     var collection       =  datb.collection("Restaurante");
     collection.aggregate([
         { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "menu" } },
-		{ $lookup: { from: "Promocion", localField: "_id", foreignField: "restaurante._id", as: "promociones" } },
-		{ $lookup: { from: "Publicacion", localField: "_id", foreignField: "restaurante._id", as: "publicaciones" } },
+		{ $lookup: { from: "Promocion", localField: "_id", foreignField: "restaurante_id", as: "promociones" } },
+		{ $lookup: { from: "Publicacion", localField: "_id", foreignField: "restaurante_id", as: "publicaciones" } },
         { $match:  { "usuario_id" : ObjectId(req.body.data._id) } }
     ]).toArray(function(err, result){ 
         if(err){
