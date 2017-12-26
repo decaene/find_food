@@ -25,6 +25,8 @@ app.use(bodyParser());
 
 app.use('/menus', express.static('menus'));
 app.use('/restaurantes', express.static('restaurantes'));
+app.use('/promociones', express.static('promociones'));
+app.use('/publicaciones', express.static('publicaciones'));
 
 // app.configure(function() {
   // var hourMs = 1000*60*60;
