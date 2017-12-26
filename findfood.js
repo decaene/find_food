@@ -250,6 +250,8 @@ router.post("/get_restaurantes_usuario",function(req,res){
     var collection       =  datb.collection("Restaurante");
     collection.aggregate([
         { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "menu" } },
+		{ $lookup: { from: "Promocion", localField: "_id", foreignField: "restaurante_id", as: "menu" } },
+		{ $lookup: { from: "Publicacion", localField: "_id", foreignField: "restaurante_id", as: "menu" } },
         { $match:  { "usuario_id" : ObjectId(req.body.data._id) } }
     ]).toArray(function(err, result){ 
         if(err){
@@ -360,6 +362,86 @@ router.post("/nuevo_restaurante",function(req,res){
                             });
                         }
                         result.status = "success";
+                        res.send(result);
+                    }
+            });
+        }
+    });
+});
+
+router.post("/nueva_promocion",function(req,res){
+    var collection           =  datb.collection('Promocion');
+    var promocion            =  req.body.data;
+    var foto_promocion       =  req.body.data.foto;
+    promocion.foto         	 =  "";
+    collection.insert(promocion, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            console.log(result.insertedIds[0]);
+            var data = foto_promocion.replace(/^data:image\/\w+;base64,/, "");
+            var buf = new Buffer(data, 'base64');
+            fs.writeFile('promociones/'+result.insertedIds[0]+'_foto.png', buf);
+
+            collection.update(
+                { '_id' : ObjectId(result.insertedIds[0]) }, 
+                { $set: { 'foto' : 'promociones/'+result.insertedIds[0]+'_foto.png' } }, 
+                function(err, result2){  
+                    if(err){
+                        var res_err      = {};
+                        res_err.status   = "error";
+                        res_err.error    = err;
+                        res_err.message  = err;
+                        res.send(res_err);
+                    }
+                    else{
+                        result.status  = "success";
+						result.message = "Promoción insertada con éxito, espera la confirmación cuando se acepte el contenido. ¡Gracias! :)";
+                        res.send(result);
+                    }
+            });
+        }
+    });
+});
+
+router.post("/nueva_publicacion",function(req,res){
+    var collection           =  datb.collection('Publicacion');
+    var publicacion          =  req.body.data;
+    var foto_publicacion     =  req.body.data.foto;
+    publicacion.foto         =  "";
+    collection.insert(publicacion, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            console.log(result.insertedIds[0]);
+            var data = foto_publicacion.replace(/^data:image\/\w+;base64,/, "");
+            var buf = new Buffer(data, 'base64');
+            fs.writeFile('publicaciones/'+result.insertedIds[0]+'_foto.png', buf);
+
+            collection.update(
+                { '_id' : ObjectId(result.insertedIds[0]) }, 
+                { $set: { 'foto' : 'publicaciones/'+result.insertedIds[0]+'_foto.png' } }, 
+                function(err, result2){  
+                    if(err){
+                        var res_err      = {};
+                        res_err.status   = "error";
+                        res_err.error    = err;
+                        res_err.message  = err;
+                        res.send(res_err);
+                    }
+                    else{
+                        result.status  = "success";
+						result.message = "Publicación insertada con éxito, espera la confirmación cuando se acepte el contenido. ¡Gracias! :)";
                         res.send(result);
                     }
             });
