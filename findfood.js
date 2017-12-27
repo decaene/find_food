@@ -274,7 +274,6 @@ router.post("/get_restaurantes_usuario",function(req,res){
 });
 
 router.post("/get_restaurantes_publicaciones",function(req,res){
-    console.log(ObjectId(req.body.data._id));
     var collection       =  datb.collection("Publicacion");
     collection.aggregate([
     ]).toArray(function(err, result){ 
