@@ -442,7 +442,7 @@ router.post("/update_like_restaurante",function(req,res){
     collection.update(
 		{ '_id' : post_id }, 
 		{ $push: { 'likes' : { "user_id" : user_id } } }, 
-		function(err, result2){  
+		function(err, result){  
 			if(err){
 				var res_err      = {};
 				res_err.status   = "error";
