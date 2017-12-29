@@ -322,6 +322,7 @@ router.post("/nuevo_restaurante",function(req,res){
     var collection           =  datb.collection('Restaurante');
     var restaurante          =  req.body.data;
     var foto_restaurante     =  req.body.data.foto;
+	var cover_restaurante    =  req.body.data.cover;
     var menu                 =  req.body.data.menu;
     restaurante.foto         =  "";
     restaurante.menu         =  [];
@@ -339,10 +340,16 @@ router.post("/nuevo_restaurante",function(req,res){
             var data = foto_restaurante.replace(/^data:image\/\w+;base64,/, "");
             var buf = new Buffer(data, 'base64');
             fs.writeFile('restaurantes/'+result.insertedIds[0]+'_foto.png', buf);
+			
+			var data = cover_restaurante.replace(/^data:image\/\w+;base64,/, "");
+            var buf = new Buffer(data, 'base64');
+            fs.writeFile('restaurantes_cover/'+result.insertedIds[0]+'_foto.png', buf);
 
             collection.update(
                 { '_id' : ObjectId(result.insertedIds[0]) }, 
-                { $set: { 'foto' : 'restaurantes/'+result.insertedIds[0]+'_foto.png' } }, 
+                { $set: { 'foto' : 'restaurantes/'+result.insertedIds[0]+'_foto.png' ,
+						  'cover' : 'restaurantes_cover/'+result.insertedIds[0]+'_foto.png' 
+				} }, 
                 function(err, result2){  
                     if(err){
                         var res_err      = {};
