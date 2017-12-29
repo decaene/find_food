@@ -275,7 +275,9 @@ router.post("/get_restaurantes_usuario",function(req,res){
 
 router.post("/get_restaurantes_publicaciones",function(req,res){
     var collection       =  datb.collection("Publicacion");
+	// "tipo_uid": new ObjectId("5a24a415b0881016f70801e7")
     collection.aggregate([
+		{ $lookup: { from: "Restaurante", localField: "restaurante_id", foreignField: "_id", as: "restaurante" } },
     ]).toArray(function(err, result){ 
         if(err){
             var res_err      = {};
@@ -431,6 +433,29 @@ router.post("/nueva_promocion",function(req,res){
             });
         }
     });
+});
+
+router.post("/update_like_restaurante",function(req,res){
+    var collection           		=  datb.collection('Restaurante');
+    var user_id           			=  ObjectId(req.body.user._id);
+	var post_id           			=  ObjectId(req.body.post._id);
+    collection.update(
+		{ '_id' : post_id }, 
+		{ $push: { 'likes' : { "user_id" : user_id } }, 
+		function(err, result2){  
+			if(err){
+				var res_err      = {};
+				res_err.status   = "error";
+				res_err.error    = err;
+				res_err.message  = err;
+				res.send(res_err);
+			}
+			else{
+				result.status  = "success";
+				result.message = "Like guardado";
+				res.send(result);
+			}
+	});
 });
 
 router.post("/nueva_publicacion",function(req,res){
