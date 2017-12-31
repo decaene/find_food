@@ -13,6 +13,7 @@ var path        =   require('path');
 var multer      =   require('multer');
 var fs          =   require('fs');
 var bodyParser  =   require('body-parser');
+var http 		= 	require('http');
 // var dateFormat  =   require('dateformat');
 // var moment      =   require('moment');
 // var QRCode      =   require('qrcode');
@@ -29,14 +30,17 @@ app.use('/promociones', express.static('promociones'));
 app.use('/publicaciones', express.static('publicaciones'));
 app.use('/restaurantes_cover', express.static('restaurantes_cover'));
 
-// app.configure(function() {
-  // var hourMs = 1000*60*60;
-  // app.use(express.static(__dirname + '/public', { maxAge: hourMs }));
-  // app.use(express.directory(__dirname + '/public'));
-  // app.use(express.errorHandler());
-// });
 
-// Run server to listen on port 3001.
+var storage = multer.diskStorage({
+  destination: './uploads/',
+  filename: function (req, file, cb) {
+    cb(null, file.originalname.replace(path.extname(file.originalname), "") + '-' + Date.now() + path.extname(file.originalname))
+  }
+})
+
+var upload = multer({ storage: storage });
+
+
 var server = app.listen(3003, () => {
     console.log('Find food en:3003');
 });
@@ -507,23 +511,8 @@ router.post("/nueva_publicacion",function(req,res){
     });
 });
 
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
-  }
-});
-var upload = multer({ storage : storage}).single('userPhoto');
-
-app.post('/api/photo',function(req,res){
-    upload(req,res,function(err) {
-        if(err) {
-            return res.end("Error uploading file.");
-        }
-        res.end("File is uploaded");
-    });
+app.post('/savedata', upload.single('file'), function(req,res,next){
+    console.log('Uploade Successful ', req.file, req.body);
 });
 
 app.use('/',router);
