@@ -29,6 +29,7 @@ app.use('/restaurantes', express.static('restaurantes'));
 app.use('/promociones', express.static('promociones'));
 app.use('/publicaciones', express.static('publicaciones'));
 app.use('/restaurantes_cover', express.static('restaurantes_cover'));
+app.use('/restaurantes_documentos', express.static('restaurantes_documentos'));
 
 
 var storage = multer.diskStorage({
@@ -382,6 +383,10 @@ router.post("/nuevo_restaurante",function(req,res){
                                     var data = menu_foto.replace(/^data:image\/\w+;base64,/, "");
                                     var buf = new Buffer(data, 'base64');
                                     fs.writeFile('menus/'+result.insertedIds[0]+'_foto.png', buf);
+									
+									if($scope.restaurante.dni_restaurante != undefined){
+										fs.writeFile('restaurantes_documentos/'+result.insertedIds[0]+'_dni.png', restaurante.dni_restaurante);
+									}
 
                                     collection.update(
                                         { '_id' : ObjectId(result3.insertedIds[0]) }, 
