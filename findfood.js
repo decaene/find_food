@@ -383,7 +383,7 @@ router.post("/nuevo_restaurante",function(req,res){
                                     var data = menu_foto.replace(/^data:image\/\w+;base64,/, "");
                                     var buf = new Buffer(data, 'base64');
                                     fs.writeFile('menus/'+result.insertedIds[0]+'_foto.png', buf);
-									
+									console.log("DNI");
 									console.log(restaurante.dni_restaurante);
 									if(restaurante.dni_restaurante != undefined){
 										fs.writeFile('restaurantes_documentos/'+result.insertedIds[0]+'_dni.png', restaurante.dni_restaurante);
