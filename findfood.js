@@ -370,7 +370,7 @@ router.post("/get_restaurantes_feed",function(req,res){
 });
 
 router.post("/testing_files",function(req,res){
-	console.log(req);
+	console.log(req.body);
 	var res_err      = {};
 	res_err.status   = "error";
 	res_err.message  = "Test";
