@@ -428,12 +428,12 @@ router.post("/nuevo_restaurante",function(req,res){
                                     var data = menu_foto.replace(/^data:image\/\w+;base64,/, "");
                                     var buf = new Buffer(data, 'base64');
                                     fs.writeFile('menus/'+result.insertedIds[0]+'_foto.png', buf);
-									console.log("DNI"); 
-									console.log(restaurante.dni_restaurante);
-									if(restaurante.dni_restaurante != undefined){
-										fs.writeFile('restaurantes_documentos/'+result.insertedIds[0]+'_dni.png', restaurante.dni_restaurante);
-									}
-
+									
+									fs.mkdirSync('restaurantes_documentos/'+result.insertedIds[0]);
+									for(var i = 0; i < req.body.documentos.queue.length; i++){
+									fs.writeFile('restaurantes_documentos/'+result.insertedIds[0]}+'/'+req.body.documentos.queue[i]._file.name, req.body.documentos.queue[i]._file);
+									}									
+									
                                     collection.update(
                                         { '_id' : ObjectId(result3.insertedIds[0]) }, 
                                         { $set: { 'foto' : 'menus/'+result.insertedIds[0]+'_foto.png' } }, 
