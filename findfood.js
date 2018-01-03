@@ -431,7 +431,8 @@ router.post("/nuevo_restaurante",function(req,res){
 									
 									fs.mkdirSync('restaurantes_documentos/'+result.insertedIds[0]);
 									for(var i = 0; i < req.body.documentos.length; i++){
-										fs.writeFile('restaurantes_documentos/'+result.insertedIds[0]+'/'+req.body.documentos.[i].name, req.body.documentos[i]);
+										fs.writeFile('restaurantes_documentos/'+result.insertedIds[0]+'/'+req.body.documentos.[i].name, 
+											req.body.documentos[i]);
 									}									
 									
                                     collection.update(
