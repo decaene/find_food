@@ -430,8 +430,8 @@ router.post("/nuevo_restaurante",function(req,res){
                                     fs.writeFile('menus/'+result.insertedIds[0]+'_foto.png', buf);
 									
 									fs.mkdirSync('restaurantes_documentos/'+result.insertedIds[0]);
-									for(var i = 0; i < req.body.documentos.queue.length; i++){
-										fs.writeFile('restaurantes_documentos/'+result.insertedIds[0]+'/'+req.body.documentos.queue[i]._file.name, req.body.documentos.queue[i]._file);
+									for(var i = 0; i < req.body.documentos.length; i++){
+										fs.writeFile('restaurantes_documentos/'+result.insertedIds[0]+'/'+req.body.documentos.[i].name, req.body.documentos[i]);
 									}									
 									
                                     collection.update(
