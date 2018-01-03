@@ -565,7 +565,7 @@ router.post("/nueva_publicacion",function(req,res){
 router.post("/nueva_categoria",function(req,res){
     var collection           		=  datb.collection('Categoria_Platillo');
 	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
-    collection.insert(publicacion, function(err, result) {
+    collection.insert(req.body.data, function(err, result) {
         if(err){
             var res_err      = {};
             res_err.status   = "error";
@@ -584,7 +584,7 @@ router.post("/nueva_categoria",function(req,res){
 router.post("/nuevo_adicional",function(req,res){
     var collection           		=  datb.collection('Adicional_Platillo');
 	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
-    collection.insert(publicacion, function(err, result) {
+    collection.insert(req.body.data, function(err, result) {
         if(err){
             var res_err      = {};
             res_err.status   = "error";
@@ -596,6 +596,43 @@ router.post("/nuevo_adicional",function(req,res){
             result.status  = "success";
 			result.message = "Adicional agregado :)";
 			res.send(result);
+        }
+    });
+});
+
+router.post("/nuevo_platillo",function(req,res){
+    var collection           		=  datb.collection('Menu');
+	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
+	var menu_foto            		=  req.body.data.foto;
+    collection.insert(req.body.data, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+			
+			var data = menu_foto.replace(/^data:image\/\w+;base64,/, "");
+			var buf = new Buffer(data, 'base64');
+			fs.writeFile('menus/'+result.insertedIds[0]+'_foto.png', buf);
+			collection.update(
+				{ '_id' : ObjectId(result.insertedIds[0]) }, 
+				{ $set: { 'foto' : 'menus/'+result.insertedIds[0]+'_foto.png' } }, 
+				function(err, result2){  
+					if(err){
+						var res_err      = {};
+						res_err.status   = "error";
+						res_err.error    = err;
+						res_err.message  = err;
+						res.send(res_err);
+					}else{
+						result2.status  = "success";
+						result2.message = "Platillo agregado :)";
+						res.send(result2);
+					}
+			});
         }
     });
 });
