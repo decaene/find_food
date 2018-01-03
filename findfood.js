@@ -369,6 +369,14 @@ router.post("/get_restaurantes_feed",function(req,res){
     });
 });
 
+router.post("/testing_files",function(req,res){
+	console.log(req);
+	var res_err      = {};
+	res_err.status   = "error";
+	res_err.message  = "Test";
+	res.send(res_err);
+});
+
 router.post("/nuevo_restaurante",function(req,res){
     var collection           =  datb.collection('Restaurante');
     var restaurante          =  req.body.data;
