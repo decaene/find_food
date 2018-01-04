@@ -276,6 +276,27 @@ router.post("/get_detalles_restaurante",function(req,res){
     });
 });
 
+router.post("/get_restaurante_by_id",function(req,res){
+    var collection      = datb.collection('Restaurante');
+    collection.aggregate([
+		{ $match:  { "_id" : ObjectId(req.body.data._id) } }
+	]).toArray(function(err, result){  
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }else{
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Restaurante";
+            res_data.data     = result;
+            res.send(res_data);
+        }
+    });
+});
+
 router.post("/get_restaurantes_usuario",function(req,res){
     console.log(ObjectId(req.body.data._id));
     var collection       =  datb.collection("Restaurante");
