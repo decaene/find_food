@@ -596,6 +596,7 @@ router.post("/nueva_publicacion",function(req,res){
 router.post("/nueva_categoria",function(req,res){
     var collection           		=  datb.collection('Categoria_Platillo');
 	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
+	req.body.data.usuario_alta 		=  ObjectId(req.body.data.usuario_alta);
     collection.insert(req.body.data, function(err, result) {
         if(err){
             var res_err      = {};
@@ -615,6 +616,7 @@ router.post("/nueva_categoria",function(req,res){
 router.post("/nuevo_adicional",function(req,res){
     var collection           		=  datb.collection('Adicional_Platillo');
 	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
+	req.body.data.usuario_alta 		=  ObjectId(req.body.data.usuario_alta);
     collection.insert(req.body.data, function(err, result) {
         if(err){
             var res_err      = {};
@@ -634,6 +636,7 @@ router.post("/nuevo_adicional",function(req,res){
 router.post("/nuevo_platillo",function(req,res){
     var collection           		=  datb.collection('Menu');
 	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
+	req.body.data.usuario_alta 		=  ObjectId(req.body.data.usuario_alta);
 	var menu_foto            		=  req.body.data.foto;
     collection.insert(req.body.data, function(err, result) {
         if(err){
