@@ -30,6 +30,7 @@ app.use('/promociones', express.static('promociones'));
 app.use('/publicaciones', express.static('publicaciones'));
 app.use('/restaurantes_cover', express.static('restaurantes_cover'));
 app.use('/restaurantes_documentos', express.static('restaurantes_documentos'));
+app.use('/combos', express.static('combos'));
 
 
 var storage = multer.diskStorage({
@@ -339,6 +340,50 @@ router.post("/get_restaurante_menu",function(req,res){
             var res_data      = {};
             res_data.status   = "success";
             res_data.message  = "Menu";
+            res_data.data     = result;
+            res.send(res_data);
+        }
+    });
+});
+
+router.post("/get_restaurante_combos",function(req,res){
+    var collection       =  datb.collection("Combo");
+    collection.aggregate([
+        { $match:  { "restaurante_id" : ObjectId(req.body.data._id) } }
+    ]).toArray(function(err, result){ 
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Combos";
+            res_data.data     = result;
+            res.send(res_data);
+        }
+    });
+});
+
+router.post("/get_restaurante_ofertas",function(req,res){
+    var collection       =  datb.collection("Oferta");
+    collection.aggregate([
+        { $match:  { "restaurante_id" : ObjectId(req.body.data._id) } }
+    ]).toArray(function(err, result){ 
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Ofertas";
             res_data.data     = result;
             res.send(res_data);
         }
@@ -664,6 +709,82 @@ router.post("/nuevo_platillo",function(req,res){
 					}else{
 						result2.status  = "success";
 						result2.message = "Platillo agregado :)";
+						res.send(result2);
+					}
+			});
+        }
+    });
+});
+
+router.post("/nuevo_combo",function(req,res){
+    var collection           		=  datb.collection('Combo');
+	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
+	req.body.data.usuario_alta 		=  ObjectId(req.body.data.usuario_alta);
+	var menu_foto            		=  req.body.data.foto;
+    collection.insert(req.body.data, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+			
+			var data = menu_foto.replace(/^data:image\/\w+;base64,/, "");
+			var buf = new Buffer(data, 'base64');
+			fs.writeFile('combos/'+result.insertedIds[0]+'_foto.png', buf);
+			collection.update(
+				{ '_id' : ObjectId(result.insertedIds[0]) }, 
+				{ $set: { 'foto' : 'combos/'+result.insertedIds[0]+'_foto.png' } }, 
+				function(err, result2){  
+					if(err){
+						var res_err      = {};
+						res_err.status   = "error";
+						res_err.error    = err;
+						res_err.message  = err;
+						res.send(res_err);
+					}else{
+						result2.status  = "success";
+						result2.message = "Combo agregado :)";
+						res.send(result2);
+					}
+			});
+        }
+    });
+});
+
+router.post("/nuevo_oferta",function(req,res){
+    var collection           		=  datb.collection('Oferta');
+	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
+	req.body.data.usuario_alta 		=  ObjectId(req.body.data.usuario_alta);
+	var menu_foto            		=  req.body.data.foto;
+    collection.insert(req.body.data, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+			
+			var data = menu_foto.replace(/^data:image\/\w+;base64,/, "");
+			var buf = new Buffer(data, 'base64');
+			fs.writeFile('promociones/'+result.insertedIds[0]+'_foto.png', buf);
+			collection.update(
+				{ '_id' : ObjectId(result.insertedIds[0]) }, 
+				{ $set: { 'foto' : 'promociones/'+result.insertedIds[0]+'_foto.png' } }, 
+				function(err, result2){  
+					if(err){
+						var res_err      = {};
+						res_err.status   = "error";
+						res_err.error    = err;
+						res_err.message  = err;
+						res.send(res_err);
+					}else{
+						result2.status  = "success";
+						result2.message = "Oferta agregada :)";
 						res.send(result2);
 					}
 			});
