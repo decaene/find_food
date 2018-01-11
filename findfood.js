@@ -627,7 +627,7 @@ router.post("/update_comment_restaurante",function(req,res){
 	var post_id           			=  ObjectId(req.body.post._id);
     collection.update(
 		{ '_id' : post_id }, 
-		{ $push: { 'likes' : { "user_id" : user_id , "comment" : req.body.user.comment } } }, 
+		{ $push: { 'comentarios' : { "user_id" : user_id , "comment" : req.body.user.comment } } }, 
 		function(err, result){  
 			if(err){
 				var res_err      = {};
@@ -638,7 +638,7 @@ router.post("/update_comment_restaurante",function(req,res){
 			}
 			else{
 				result.status  = "success";
-				result.message = "Like guardado";
+				result.message = "Comentario guardado";
 				res.send(result);
 			}
 	});
