@@ -627,7 +627,7 @@ router.post("/remove_like_restaurante",function(req,res){
 	var post_id           			=  ObjectId(req.body.post._id);
     collection.update(
 		{ '_id' : post_id }, 
-		{ $pull: { 'likes' : { $in: [ user_id ] } } }, 
+		{ $pull: { 'likes.user_id' : { $in: [ user_id ] } } }, 
 		function(err, result){  
 			if(err){
 				var res_err      = {};
