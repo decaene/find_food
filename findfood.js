@@ -437,6 +437,30 @@ router.post("/get_restaurantes_publicaciones_by_id",function(req,res){
     });
 });
 
+router.post("/get_restaurantes_publicaciones_by_publicacion_id",function(req,res){
+    var collection       =  datb.collection("Publicacion");
+	// "tipo_uid": new ObjectId("5a24a415b0881016f70801e7")
+    collection.aggregate([
+		{ $match:  { "_id" : ObjectId(req.body.data._id) } },
+		{ $lookup: { from: "Restaurante", localField: "restaurante_id", foreignField: "_id", as: "restaurante" } },
+    ]).toArray(function(err, result){ 
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Publicación individual";
+            res_data.data     = result;
+            res.send(res_data);
+        }
+    });
+});
+
 router.post("/get_restaurantes_feed",function(req,res){
     var collection       =  datb.collection("Restaurante");
     collection.aggregate([
