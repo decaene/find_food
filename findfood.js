@@ -621,6 +621,29 @@ router.post("/update_like_restaurante",function(req,res){
 	});
 });
 
+router.post("/update_comment_restaurante",function(req,res){
+    var collection           		=  datb.collection('Restaurante');
+    var user_id           			=  ObjectId(req.body.user._id);
+	var post_id           			=  ObjectId(req.body.post._id);
+    collection.update(
+		{ '_id' : post_id }, 
+		{ $push: { 'likes' : { "user_id" : user_id , "comment" : req.body.user.comment } } }, 
+		function(err, result){  
+			if(err){
+				var res_err      = {};
+				res_err.status   = "error";
+				res_err.error    = err;
+				res_err.message  = err;
+				res.send(res_err);
+			}
+			else{
+				result.status  = "success";
+				result.message = "Like guardado";
+				res.send(result);
+			}
+	});
+});
+
 router.post("/nueva_publicacion",function(req,res){
     var collection           		=  datb.collection('Publicacion');
     var publicacion          		=  req.body.data;
