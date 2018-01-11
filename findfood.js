@@ -621,6 +621,29 @@ router.post("/update_like_restaurante",function(req,res){
 	});
 });
 
+router.post("/remove_like_restaurante",function(req,res){
+    var collection           		=  datb.collection('Restaurante');
+    var user_id           			=  ObjectId(req.body.user._id);
+	var post_id           			=  ObjectId(req.body.post._id);
+    collection.update(
+		{ '_id' : post_id }, 
+		{ $pull: { 'likes' : { $in: [ user_id ] } } }, 
+		function(err, result){  
+			if(err){
+				var res_err      = {};
+				res_err.status   = "error";
+				res_err.error    = err;
+				res_err.message  = err;
+				res.send(res_err);
+			}
+			else{
+				result.status  = "success";
+				result.message = "Like eliminado";
+				res.send(result);
+			}
+	});
+});
+
 router.post("/update_comment_restaurante",function(req,res){
     var collection           		=  datb.collection('Restaurante');
     var user_id           			=  ObjectId(req.body.user._id);
