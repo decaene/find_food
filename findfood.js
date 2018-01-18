@@ -644,6 +644,40 @@ router.post("/update_user_preferencias",function(req,res){
 	});
 });
 
+router.post("/update_user_location",function(req,res){
+    var collection           		=  datb.collection('Usuario');
+    var user_id           			=  ObjectId(req.body.data._id);
+    collection.update(
+		{ '_id' : user_id }, 
+		{ 'location' : req.body.data.ubicacion }, 
+		function(err, result){  
+			if(err){
+				var res_err      = {};
+				res_err.status   = "error";
+				res_err.error    = err;
+				res_err.message  = err;
+				res.send(res_err);
+			}
+			else{
+				collection.insert(publicacion, function(err, result) {
+				if(err){
+					var res_err      = {};
+					res_err.status   = "error";
+					res_err.error    = err;
+					res_err.message  = err;
+					res.send(res_err);
+				}
+				else{
+					var res_data      = {};
+					res_data.status   = "success";
+					res_data.message  = "Ubicación actualizada. ¡Gracias!";
+					res.send(res_data);
+				}
+				});
+			}
+	});
+});
+
 router.post("/update_like_restaurante",function(req,res){
     var collection           		=  datb.collection('Restaurante');
     var user_id           			=  ObjectId(req.body.user._id);
