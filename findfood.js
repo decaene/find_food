@@ -627,7 +627,7 @@ router.post("/update_user_preferencias",function(req,res){
     var user_id           			=  ObjectId(req.body.data._id);
     collection.update(
 		{ '_id' : user_id }, 
-		{ $push: { 'preferencias' : req.body.data.preferencias } }, 
+		{ $push: { 'preferencias' : req.body.data.preferencias_seleccionadas } }, 
 		function(err, result){  
 			if(err){
 				var res_err      = {};
