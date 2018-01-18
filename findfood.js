@@ -649,7 +649,7 @@ router.post("/update_user_location",function(req,res){
     var user_id           			=  ObjectId(req.body.data._id);
     collection.update(
 		{ '_id' : user_id }, 
-		{ 'location' : req.body.data.ubicacion }, 
+		{ $push: { 'location' : req.body.data.ubicacion } }, 
 		function(err, result){  
 			if(err){
 				var res_err      = {};
