@@ -660,10 +660,10 @@ router.post("/update_user_location",function(req,res){
 			}
 			else{
 				collection =  datb.collection('Ubicacion');
-				req.body.data.ubicaciones.usuario_id = ObjectId(req.body.data.ubicaciones.usuario_id);
+				req.body.ubicaciones.usuario_id = ObjectId(req.body.ubicaciones.usuario_id);
 				var catalogo_de_ubicaciones = {};
-				catalogo_de_ubicaciones = req.body.data.ubicaciones.ubicacion[0];
-				catalogo_de_ubicaciones.usuario_id = req.body.data.ubicaciones.usuario_id;
+				catalogo_de_ubicaciones = req.body.ubicaciones.ubicacion[0];
+				catalogo_de_ubicaciones.usuario_id = req.body.ubicaciones.usuario_id;
 				collection.insert(catalogo_de_ubicaciones, function(err, result) {
 				if(err){
 					var res_err      = {};
