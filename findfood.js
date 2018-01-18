@@ -622,6 +622,28 @@ router.post("/nueva_promocion",function(req,res){
     });
 });
 
+router.post("/update_user_preferencias",function(req,res){
+    var collection           		=  datb.collection('Usuario');
+    var user_id           			=  ObjectId(req.body.data._id);
+    collection.update(
+		{ '_id' : user_id }, 
+		{ $push: { 'preferencias' : req.body.data.preferencias } }, 
+		function(err, result){  
+			if(err){
+				var res_err      = {};
+				res_err.status   = "error";
+				res_err.error    = err;
+				res_err.message  = err;
+				res.send(res_err);
+			}
+			else{
+				result.status  = "success";
+				result.message = "Preferencias actualizadas. ¡Gracias :)!";
+				res.send(result);
+			}
+	});
+});
+
 router.post("/update_like_restaurante",function(req,res){
     var collection           		=  datb.collection('Restaurante');
     var user_id           			=  ObjectId(req.body.user._id);
