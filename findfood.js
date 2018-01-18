@@ -660,21 +660,23 @@ router.post("/update_user_location",function(req,res){
 			}
 			else{
 				collection =  datb.collection('Ubicacion');
-				collection.insertMany(req.body.data.ubicaciones, function(err, result) {
-				if(err){
-					var res_err      = {};
-					res_err.status   = "error";
-					res_err.error    = err;
-					res_err.message  = err;
-					res.send(res_err);
+				req.body.data.ubicaciones.usuario_id = ObjectId(req.body.data.ubicaciones.usuario_id);
+				for( var i = 0; i < req.body.data.ubicaciones.ubicacion.length; i++){
+					req.body.data.ubicaciones.ubicacion.usuario_id = req.body.data.ubicaciones.usuario_id;
+					collection.insert(req.body.data.ubicaciones.ubicacion[i], function(err, result) {
+					if(err){
+						var res_err      = {};
+						res_err.status   = "error";
+						res_err.error    = err;
+						res_err.message  = err;
+						res.send(res_err);
+					}
+					})
 				}
-				else{
-					var res_data      = {};
-					res_data.status   = "success";
-					res_data.message  = "Ubicación actualizada. ¡Gracias!";
-					res.send(res_data);
-				}
-				});
+				var res_data      = {};
+				res_data.status   = "success";
+				res_data.message  = "Ubicación actualizada. ¡Gracias!";
+				res.send(res_data);
 			}
 	});
 });
