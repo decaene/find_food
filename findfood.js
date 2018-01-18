@@ -660,7 +660,7 @@ router.post("/update_user_location",function(req,res){
 			}
 			else{
 				collection =  datb.collection('Ubicacion');
-				collection.insert(req.body.data.ubicaciones, function(err, result) {
+				collection.insertMany(req.body.data.ubicaciones, function(err, result) {
 				if(err){
 					var res_err      = {};
 					res_err.status   = "error";
