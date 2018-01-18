@@ -659,7 +659,7 @@ router.post("/update_user_location",function(req,res){
 				res.send(res_err);
 			}
 			else{
-				collection.insert(publicacion, function(err, result) {
+				collection.insert(req.body.data.ubicaciones, function(err, result) {
 				if(err){
 					var res_err      = {};
 					res_err.status   = "error";
