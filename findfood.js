@@ -722,9 +722,10 @@ router.post("/quitar_like",function(req,res){
 				res.send(res_err);
 			}
 			else{
-				result.status  = "success";
-				result.message = "Like eliminado";
-				res.send(result);
+				var res_data    = {};
+				res_data.status  = "success";
+				res_data.message = "Like eliminado";
+				res.send(res_data);
 			}
 	});
 });
