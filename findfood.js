@@ -813,6 +813,26 @@ router.post("/nueva_categoria",function(req,res){
     });
 });
 
+router.post("/nuevo_like",function(req,res){
+    var collection    =  datb.collection('Like');
+	req.body.like.usuario_id 	 =  ObjectId(req.body.like.usuario_id);
+	req.body.like.publicacion_id =  ObjectId(req.body.like.publicacion_id);
+    collection.insert(req.body.like, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            result.status  = "success";
+			result.message = "Like agregado :)";
+			res.send(result);
+        }
+    });
+});
+
 router.post("/nuevo_adicional",function(req,res){
     var collection           		=  datb.collection('Adicional_Platillo');
 	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
