@@ -707,13 +707,12 @@ router.post("/update_like_restaurante",function(req,res){
 	});
 });
 
-router.post("/remove_like_restaurante",function(req,res){
-    var collection           		=  datb.collection('Restaurante');
-    var user_id           			=  ObjectId(req.body.user._id);
-	var post_id           			=  ObjectId(req.body.post._id);
-    collection.update(
-		{ '_id' : post_id }, 
-		{ $pull: { 'likes' : { "user_id" : user_id } } }, 
+router.post("/quitar_like",function(req,res){
+    var collection           	=  datb.collection('Like');
+    var usuario_id           	=  ObjectId(req.body.like.usuario_id);
+	var publicacion_id          =  ObjectId(req.body.like.publicacion_id);
+    collection.deleteOne(
+		{ 'usuario_id' : usuario_id , 'publicacion_id' : publicacion_id },
 		function(err, result){  
 			if(err){
 				var res_err      = {};
