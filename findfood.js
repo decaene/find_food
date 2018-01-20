@@ -396,7 +396,7 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
     collection.aggregate([
 		{ $lookup: { from: "Restaurante", localField: "restaurante_id", foreignField: "_id", as: "restaurante" } },
         { $unwind: { path: "$restaurante"  } },
-        { $lookup: { from: "Categoria_Platillo", localField: "reservacion._id", foreignField: "restaurante_id", as: "restaurante.categorias" } },
+        { $lookup: { from: "Categoria_Platillo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.categorias" } },
 		{ $lookup: { from: "Like", localField: "_id", foreignField: "publicacion_id", as: "likes" } },
     ]).toArray(function(err, result){ 
         if(err){
