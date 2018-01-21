@@ -217,6 +217,7 @@ router.post("/get_tipo_comida",function(req,res){
 router.post("/get_ubicaciones_usuario",function(req,res){
     var collection      = datb.collection('Ubicacion');
     collection.aggregate([
+        { $match:  { "usuario_id" : ObjectId(req.body.usuario._id) } },
     ]).toArray(function(err, result){  
         if(err){
             var res_err      = {};
