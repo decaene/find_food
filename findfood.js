@@ -733,6 +733,28 @@ router.post("/update_like_restaurante",function(req,res){
 	});
 });
 
+router.post("/eliminar_ubicacion",function(req,res){
+    var collection              =  datb.collection('Ubicacion');
+    var ubicacion_id              =  ObjectId(req.body.ubicacion._id);
+    collection.deleteOne(
+        { '_id' : ubicacion_id },
+        function(err, result){  
+            if(err){
+                var res_err      = {};
+                res_err.status   = "error";
+                res_err.error    = err;
+                res_err.message  = err;
+                res.send(res_err);
+            }
+            else{
+                var res_data    = {};
+                res_data.status  = "success";
+                res_data.message = "Ubicación eliminada :)";
+                res.send(res_data);
+            }
+    });
+});
+
 router.post("/quitar_like",function(req,res){
     var collection           	=  datb.collection('Like');
     var usuario_id           	=  ObjectId(req.body.like.usuario_id);
