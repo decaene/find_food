@@ -801,6 +801,28 @@ router.post("/update_comment_restaurante",function(req,res){
 	});
 });
 
+router.post("/update_location_usuario",function(req,res){
+    var collection                  =  datb.collection('Usuario');
+    var usuario_id                  =  ObjectId(req.body.usuario._id);
+    collection.update(
+        { '_id' : usuario_id }, 
+        { $set: { 'location' : req.body.usuario.location } }, 
+        function(err, result){  
+            if(err){
+                var res_err      = {};
+                res_err.status   = "error";
+                res_err.error    = err;
+                res_err.message  = err;
+                res.send(res_err);
+            }
+            else{
+                result.status  = "success";
+                result.message = "Ubicación actualizada";
+                res.send(result);
+            }
+    });
+});
+
 router.post("/nueva_publicacion",function(req,res){
     var collection           		=  datb.collection('Publicacion');
     var publicacion          		=  req.body.data;
