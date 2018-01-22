@@ -862,7 +862,7 @@ router.post("/nuevo_like",function(req,res){
 
 router.post("/nuevo_ubicacion",function(req,res){
     var collection    =  datb.collection('Ubicacion');
-    req.body.like.usuario_id     =  ObjectId(req.body.ubicacion.usuario_id);
+    req.body.ubicacion.usuario_id     =  ObjectId(req.body.ubicacion.usuario_id);
     collection.insert(req.body.like, function(err, result) {
         if(err){
             var res_err      = {};
