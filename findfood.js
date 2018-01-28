@@ -152,6 +152,58 @@ router.post("/nuevo_usuario",function(req,res){
     });
 });
 
+router.post("/inicio_con_facebook",function(req,res){
+    var collection                  = datb.collection('Usuario');
+    req.body.data.tipo_id          = new ObjectId(req.body.data.tipo_id);
+
+    collection.find( { "fb_id" : req.body.data.fb_id } ).toArray(function(err, result){  
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            if(result.length === 0){
+                collection.insert(req.body.data, function(err, result) {
+                    if(err){
+                        var res_err      = {};
+                        res_err.status   = "error";
+                        res_err.error    = err;
+                        res_err.message  = err;
+                        res.send(res_err);
+                    }
+                    else{
+                        collection.find( { "fb_id" : req.body.data.fb_id } ).toArray(function(err, result2){  
+							if(err){
+								var res_err      = {};
+								res_err.status   = "error";
+								res_err.error    = err;
+								res_err.message  = err;
+								res.send(res_err);
+							}
+							else{
+								var res_data      = {};
+								res_data.status   = "success";
+								res_data.message  = "Bienvenido a FindFood. ¡Disfruta tu comida!";
+								res_data.data     = result2[0];
+								res.send(res_data);
+							}
+						});
+                    }
+                });
+            }else{
+                var res_data      = {};
+                res_data.status   = "success";
+                res_data.message  = "Bienvenido a FindFood. ¡Disfruta tu comida!";
+                res_data.data     = result[0];
+                res.send(res_data);
+            }
+        }
+    });
+});
+
 router.post("/autenticacion",function(req,res){
     var name_collection = "Usuario";
     var email_login     =  req.body.data.email;
