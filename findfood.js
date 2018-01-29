@@ -474,6 +474,7 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
         { $lookup: { from: "Menu", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.menu" } },
         { $lookup: { from: "Oferta", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.oferta" } },
         { $lookup: { from: "Combo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.combo" } },
+		{ $lookup: { from: "Comentario_Restaurante", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.comentarios" } },
 		{ $lookup: { from: "Like", localField: "_id", foreignField: "publicacion_id", as: "likes" } },
     ]).toArray(function(err, result){ 
         if(err){
