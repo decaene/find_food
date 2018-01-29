@@ -213,7 +213,8 @@ router.post("/autenticacion",function(req,res){
     collection.aggregate([
         { $match : { "email" : email_login, "contrasena" : password_login } },
         { $lookup: { from: "Tipo_Usuario", localField: "tipo_id",    foreignField: "_id",        as: "tipo_usuario" } },
-        { $lookup: { from: "Restaurante",  localField: "_id",        foreignField: "usuario_id", as: "restaurantes" } }
+        { $lookup: { from: "Restaurante",  localField: "_id",        foreignField: "usuario_id", as: "restaurantes" } },
+		{ $lookup: { from: "Ubicaciones",  localField: "_id",        foreignField: "usuario_id", as: "ubicaciones" } }
     ]).toArray(function(err, result){  
         if(err){
             var res_err      = {};
