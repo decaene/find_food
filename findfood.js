@@ -468,6 +468,7 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
 	// "tipo_uid": new ObjectId("5a24a415b0881016f70801e7")
     collection.aggregate([
 		{ $lookup: { from: "Restaurante", localField: "restaurante_id", foreignField: "_id", as: "restaurante" } },
+		{ $lookup: { from: "Comentario", localField: "_id", foreignField: "publicacion_id", as: "comentarios" } },
         { $unwind: { path: "$restaurante"  } },
         { $lookup: { from: "Categoria_Platillo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.categorias" } },
         { $lookup: { from: "Menu", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.menu" } },
