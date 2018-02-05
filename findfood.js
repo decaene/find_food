@@ -607,7 +607,7 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
 	// "tipo_uid": new ObjectId("5a24a415b0881016f70801e7")
     collection.aggregate([
 		{ $lookup: { from: "Restaurante", localField: "restaurante_id", foreignField: "_id", as: "restaurante" } },
-		{ $lookup: { from: "Comentario", localField: "_id", foreignField: "publicacion_id", as: "comentarios" } },
+		{ $lookup: { from: "Comentario_Publicacion", localField: "_id", foreignField: "publicacion_id", as: "comentarios" } },
         { $unwind: { path: "$restaurante"  } },
         { $lookup: { from: "Categoria_Platillo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.categorias" } },
         { $lookup: { from: "Menu", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.menu" } },
@@ -1094,6 +1094,26 @@ router.post("/nueva_categoria",function(req,res){
         else{
             result.status  = "success";
 			result.message = "Categoría agregada :)";
+			res.send(result);
+        }
+    });
+});
+
+router.post("/nuevo_comentario_publicacion",function(req,res){
+    var collection           		=  datb.collection('Comentario_Publicacion');
+	req.body.data.publicacion_id 	=  ObjectId(req.body.data.publicacion_id);
+	req.body.data.usuario_alta 		=  ObjectId(req.body.data.usuario_alta);
+    collection.insert(req.body.data, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            result.status  = "success";
+			result.message = "Comentario agregado :)";
 			res.send(result);
         }
     });
