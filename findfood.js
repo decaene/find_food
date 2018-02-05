@@ -660,7 +660,8 @@ router.post("/get_restaurantes_publicaciones_by_id",function(req,res){
 router.post("/get_comentarios_publicacion",function(req,res){
     var collection       =  datb.collection("Comentario_Publicacion");
     collection.aggregate([
-		{ $match:  { "publicacion_id" : ObjectId(req.body.data._id) } }
+		{ $match:  { "publicacion_id" : ObjectId(req.body.data._id) } },
+		{ $lookup: { from: "Usuario", localField: "usuario_alta", foreignField: "_id", as: "usuario" } }
     ]).toArray(function(err, result){ 
         if(err){
             var res_err      = {};
