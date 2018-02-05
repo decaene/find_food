@@ -212,7 +212,7 @@ router.post("/recuperar_contrasena",function(req,res){
 				let mailOptions = {
 					from: 'alanbarreraff@gmail.com', // sender address
 					to: 'alanbarreraf@hotmail.com', // list of receivers
-					subject: 'Hello', // Subject line
+					subject: 'Recupera tu contraseña', // Subject line
 					text: 'Hello world?', // plain text body
 					html: message // html body
 				};
@@ -227,8 +227,8 @@ router.post("/recuperar_contrasena",function(req,res){
 					var mailOptions = {
 						from: 'alanbarreraff@gmail.com', // sender address
 						to: req.body.data.email, // list of receivers
-						subject: 'Hello', // Subject line
-						text: 'Hello world?', // plain text body
+						subject: 'Recupera tu contraseña', // Subject line
+						text: 'Recupera tu contraseña', // plain text body
 						html: htmlToSend // html body
 					 };
 					transporter.sendMail(mailOptions, (error, info) => {
