@@ -19,9 +19,9 @@ var http 		= 	require('http');
 // var QRCode      =   require('qrcode');
 // var gcm         =   require('node-gcm');
 // var apn         =   require('apn');
-// var nodemailer  	=   require('nodemailer');
-// var smtpTransport 	= 	require('nodemailer-smtp-transport');
-// var handlebars 	  	= 	require('handlebars');
+var nodemailer  	=   require('nodemailer');
+var smtpTransport 	= 	require('nodemailer-smtp-transport');
+var handlebars 	  	= 	require('handlebars');
 
 app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
