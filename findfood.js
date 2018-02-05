@@ -171,47 +171,69 @@ router.post("/nuevo_usuario",function(req,res){
 });
 
 router.post("/recuperar_contrasena",function(req,res){
-	var message = "<b> Test de correo </b>";
-	let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: 'alanbarreraff@gmail.com', // generated ethereal user
-            pass: 'pbo031117'  // generated ethereal password
-        }
-    });
-	let mailOptions = {
-        from: 'alanbarreraff@gmail.com', // sender address
-        to: 'alanbarreraf@hotmail.com', // list of receivers
-        subject: 'Hello', // Subject line
-        text: 'Hello world?', // plain text body
-        html: message // html body
-    };
 	
-	readHTMLFile('plantillas_correo/test.html', function(err, html) {
-		var template = handlebars.compile(html);
-		var replacements = {
-			 user_p			: req.body.data.tipo_id,
-			 contrasena_p	: random_password()
-		};
-		var htmlToSend = template(replacements);
-		var mailOptions = {
-			from: 'alanbarreraff@gmail.com', // sender address
-			to: req.body.data.email, // list of receivers
-			subject: 'Hello', // Subject line
-			text: 'Hello world?', // plain text body
-			html: htmlToSend // html body
-		 };
-		transporter.sendMail(mailOptions, (error, info) => {
-			if (error) {
-				return console.log(error);
+	var usr_id           =  ObjectId(req.body.data._id);
+	var nueva_contrasena = random_password();
+    collection.update(
+		{ '_id' : usr_id }, 
+		{ $set: { 'contrasena' : nueva_contrasena 
+		} },
+		function(err, result){  
+			if(err){
+				var res_err      = {};
+				res_err.status   = "error";
+				res_err.error    = err;
+				res_err.message  = err;
+				res.send(res_err);
 			}
-			console.log('Message sent: %s', info.messageId);
-			console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-			
-			res.json({"mail" : true,"message" : "Hello World"});
-		});
+			else{
+				
+				var message = "<b> Test de correo </b>";
+				let transporter = nodemailer.createTransport({
+					host: 'smtp.gmail.com',
+					port: 587,
+					secure: false, // true for 465, false for other ports
+					auth: {
+						user: 'alanbarreraff@gmail.com', // generated ethereal user
+						pass: 'pbo031117'  // generated ethereal password
+					}
+				});
+				let mailOptions = {
+					from: 'alanbarreraff@gmail.com', // sender address
+					to: 'alanbarreraf@hotmail.com', // list of receivers
+					subject: 'Hello', // Subject line
+					text: 'Hello world?', // plain text body
+					html: message // html body
+				};
+				
+				readHTMLFile('plantillas_correo/test.html', function(err, html) {
+					var template = handlebars.compile(html);
+					var replacements = {
+						 user_p			: req.body.data.nombre,
+						 contrasena_p	: nueva_contrasena
+					};
+					var htmlToSend = template(replacements);
+					var mailOptions = {
+						from: 'alanbarreraff@gmail.com', // sender address
+						to: req.body.data.email, // list of receivers
+						subject: 'Hello', // Subject line
+						text: 'Hello world?', // plain text body
+						html: htmlToSend // html body
+					 };
+					transporter.sendMail(mailOptions, (error, info) => {
+						if (error) {
+							return console.log(error);
+						}
+						console.log('Message sent: %s', info.messageId);
+						console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+						
+						res.json({"mail" : true,"message" : "Hello World"});
+					});
+				});
+				result.status  = "success";
+				result.message = "Contraseña actualizada";
+				res.send(result);
+			}
 	});
 });
 
