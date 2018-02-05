@@ -170,7 +170,7 @@ router.post("/nuevo_usuario",function(req,res){
     });
 });
 
-router.post("/recuperar_contrasena",function(req,res)
+router.post("/recuperar_contrasena",function(req,res){
 	var nueva_contrasena = random_password();
     collection.update(
 		{ '_id' : req.body.data.email }, 
