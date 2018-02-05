@@ -96,6 +96,21 @@ app.use(function (req, res, next) {
 
 // Add Security Headers
 
+
+// FUNCTIONS 
+
+function random_password() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
+
+// FUNCTIONS
+
 // Database Mongo Connection //
 
 var datb;
@@ -153,6 +168,51 @@ router.post("/nuevo_usuario",function(req,res){
             }
         }
     });
+});
+
+router.post("/recuperar_contrasena",function(req,res){
+	var message = "<b> Test de correo </b>";
+	let transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: 'alanbarreraff@gmail.com', // generated ethereal user
+            pass: 'pbo031117'  // generated ethereal password
+        }
+    });
+	let mailOptions = {
+        from: 'alanbarreraff@gmail.com', // sender address
+        to: 'alanbarreraf@hotmail.com', // list of receivers
+        subject: 'Hello', // Subject line
+        text: 'Hello world?', // plain text body
+        html: message // html body
+    };
+	
+	readHTMLFile('plantillas_correo/test.html', function(err, html) {
+		var template = handlebars.compile(html);
+		var replacements = {
+			 user_p			: req.body.data.tipo_id,
+			 contrasena_p	: random_password()
+		};
+		var htmlToSend = template(replacements);
+		var mailOptions = {
+			from: 'alanbarreraff@gmail.com', // sender address
+			to: req.body.data.email, // list of receivers
+			subject: 'Hello', // Subject line
+			text: 'Hello world?', // plain text body
+			html: htmlToSend // html body
+		 };
+		transporter.sendMail(mailOptions, (error, info) => {
+			if (error) {
+				return console.log(error);
+			}
+			console.log('Message sent: %s', info.messageId);
+			console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+			
+			res.json({"mail" : true,"message" : "Hello World"});
+		});
+	});
 });
 
 router.post("/inicio_con_facebook",function(req,res){
