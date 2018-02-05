@@ -35,6 +35,18 @@ app.use('/restaurantes_cover', express.static('restaurantes_cover'));
 app.use('/restaurantes_documentos', express.static('restaurantes_documentos'));
 app.use('/combos', express.static('combos'));
 
+var readHTMLFile = function(path, callback) {
+    fs.readFile(path, {encoding: 'utf-8'}, function (err, html) {
+        if (err) {
+            throw err;
+            callback(err);
+        }
+        else {
+            callback(null, html);
+        }
+    });
+};
+
 
 var storage = multer.diskStorage({
   destination: './uploads/',
