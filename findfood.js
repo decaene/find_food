@@ -139,6 +139,28 @@ function random_password() {
   return text;
 }
 
+function publicacion_like(publicacion, usuario){
+	var liked = 0;
+	for( var i = 0; i<publicacion.likes.length; i++){
+		if(publicacion.likes[i].usuario_id === usuario._id){
+			liked = 1;
+		}else{
+			liked = 0;
+		}
+	}
+	
+	if( liked === 1){
+		publicacion.like = true;
+		publicacion.like_icon = "brand/like_icon_color.png";
+		console.log("ok");
+	}else{
+		publicacion.like = false;
+		publicacion.like_icon = "brand/like_icon.png";
+		console.log("not");
+	}
+	return publicacion;
+}
+
 // FUNCTIONS
 
 // Database Mongo Connection //
@@ -633,12 +655,6 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
         { $lookup: { from: "Combo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.combo" } },
 		{ $lookup: { from: "Comentario_Restaurante", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.comentarios" } },
 		{ $lookup: { from: "Like", localField: "_id", foreignField: "publicacion_id", as: "likes" } },
-		{
-        "$project": {
-				"doc": $$ROOT,
-				"isUser": 1
-			}
-		}
     ]).toArray(function(err, result){ 
         if(err){
             var res_err      = {};
@@ -648,6 +664,11 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
             res.send(res_err);
         }
         else{
+			
+			for(var i = 0; i < result.length; i++){
+				result[i] = publicacion_like(result[i], req.body.data);
+			}
+			
 			var res_data      = {};
             res_data.status   = "success";
             res_data.message  = "Restaurantes";
