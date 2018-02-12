@@ -166,7 +166,7 @@ function publicacion_like(publicacion, usuario){
 function publicacion_no_ver_mas(publicacion, usuario){
 	var no_ver_mas = 0;
 	for( var i = 0; i<publicacion.no_ver_mas.length; i++){
-		if(publicacion.no_ver_mas[i].usuario_id.toString().trim() === usuario._id.toString().trim()){
+		if(publicacion.no_ver_mas[i].usuario_alta.toString().trim() === usuario._id.toString().trim()){
 			no_ver_mas = 1;
 		}else{
 			no_ver_mas = 0;
@@ -803,6 +803,7 @@ router.post("/get_restaurantes_publicaciones_by_publicacion_id",function(req,res
         else{
 			
 			result[0]	= publicacion_like(result[0], req.body.usuario);
+			result[i]	= publicacion_no_ver_mas(result[0], req.body.data);
 			if(req.body.usuario.location != undefined){
 					result[0].distancia = getDistanceFromLatLonInKm(
 					result[0].restaurante.ubicacion.latitude,
