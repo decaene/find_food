@@ -852,22 +852,24 @@ router.post("/get_restaurantes_publicaciones_by_restaurante_id",function(req,res
         }
         else{
 			
-			result[0]	= publicacion_like(result[0], req.body.usuario);
-			result[0]	= publicacion_no_ver_mas(result[0], req.body.usuario);
-			if(req.body.usuario.location != undefined){
-					result[0].distancia = getDistanceFromLatLonInKm(
-					result[0].restaurante.ubicacion.latitude,
-					result[0].restaurante.ubicacion.longitude,
-					req.body.usuario.location[0].latitude,
-					req.body.usuario.location[0].longitude,
-				);
-			}else{
-				result[0].distancia = "Ubicación no disponible.";
+			for(var i = 0; i < result.length; i++){
+				result[i] 			= publicacion_like(result[i], req.body.data);
+				result[i]			= publicacion_no_ver_mas(result[i], req.body.data);
+				if(req.body.data.location != undefined){
+					result[i].distancia = getDistanceFromLatLonInKm(
+						result[i].restaurante.ubicacion.latitude,
+						result[i].restaurante.ubicacion.longitude,
+						req.body.data.location[0].latitude,
+						req.body.data.location[0].longitude,
+					);
+				}else{
+					result[i].distancia = "Ubicación no disponible.";
+				}
 			}
 			
-            var res_data      = {};
+			var res_data      = {};
             res_data.status   = "success";
-            res_data.message  = "Publicación individual";
+            res_data.message  = "Restaurantes";
             res_data.data     = result;
             res.send(res_data);
         }
