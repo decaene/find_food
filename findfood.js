@@ -654,6 +654,7 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
 						res.send(res_err);
 					}
 					else{
+						console.log(result[i]);
 						if(its_liked_by_user.length > 0){
 							result[i].like = true;
 							result[i].like_icon = "brand/like_icon_color.png";
