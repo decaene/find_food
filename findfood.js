@@ -644,6 +644,8 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
         else{
 			console.log(result);
 			for(var i = 0; i < result.length; i++){
+				console.log("ind");
+				console.log(result[i]);
 				collection.find({ "usuario_id" : ObjectId(req.body.data.usuario_id), "publicacion_id" : ObjectId(result[i].id) })
 				.toArray(function(err, its_liked_by_user){ 
 					if(err){
