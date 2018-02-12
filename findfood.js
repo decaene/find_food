@@ -155,12 +155,10 @@ function publicacion_like(publicacion, usuario){
 		publicacion.like = true;
 		publicacion.like_icon 	= "brand/like_icon_color.png";
 		publicacion.liked_id 	= liked_id;
-		console.log("ok");
 	}else{
 		publicacion.like = false;
 		publicacion.like_icon 	= "brand/like_icon.png";
 		publicacion.liked_id 	= liked_id;
-		console.log("not");
 	}
 	return publicacion;
 }
@@ -401,6 +399,26 @@ router.post("/get_tipo_comida",function(req,res){
             var res_data      = {};
             res_data.status   = "success";
             res_data.message  = "Tipos de comida";
+            res_data.data     = result;
+            res.send(res_data);
+        }
+    });
+});
+
+router.post("/get_denuncia_opciones",function(req,res){
+    var collection      = datb.collection('Denuncia_Opciones');
+    collection.aggregate([
+    ]).toArray(function(err, result){  
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }else{
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Opciones";
             res_data.data     = result;
             res.send(res_data);
         }
