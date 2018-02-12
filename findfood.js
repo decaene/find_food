@@ -848,6 +848,28 @@ router.post("/get_restaurantes_feed",function(req,res){
     });
 });
 
+router.post("/get_restaurante_visitas",function(req,res){
+    var collection       =  datb.collection("Visita_Restaurante");
+    collection.aggregate([
+		{ $match:  { "restaurante_id" : ObjectId(req.body.restaurante._id) } }
+    ]).toArray(function(err, result){ 
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Visitas Restaurante";
+            res_data.data     = result;
+            res.send(res_data);
+        }
+    });
+});
+
 router.post("/testing_files",function(req,res){
 	console.log(req.body);
 	console.log(req.files);
@@ -1237,6 +1259,26 @@ router.post("/nuevo_comentario_publicacion",function(req,res){
         else{
             result.status  = "success";
 			result.message = "Comentario agregado :)";
+			res.send(result);
+        }
+    });
+});
+
+router.post("/nuevo_visita",function(req,res){
+    var collection           		=  datb.collection('Visita_Restaurante');
+	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
+	req.body.data.usuario_alta 		=  ObjectId(req.body.data.usuario_alta);
+    collection.insert(req.body.data, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            result.status  = "success";
+			result.message = "Visita agregada :)";
 			res.send(result);
         }
     });
