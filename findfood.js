@@ -655,16 +655,18 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
 						res.send(res_err);
 					}
 					else{
-						console.log(result[i]);
 						if(its_liked_by_user.length > 0){
 							publicacion.like = true;
 							publicacion.like_icon = "brand/like_icon_color.png";
+							console.log("ok");
 						}else{
 							publicacion.like = false;
 							publicacion.like_icon = "brand/like_icon.png";
+							console.log("not");
 						}
 					}
 				});
+				console.log(publicacion);
 				result[i] = publicacion;
 			}
             
