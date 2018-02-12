@@ -141,11 +141,11 @@ function random_password() {
 
 function publicacion_like(publicacion, usuario){
 	var liked = 0;
+	var liked_id = "";
 	for( var i = 0; i<publicacion.likes.length; i++){
-		console.log(publicacion.likes[i].usuario_id);
-		console.log(usuario._id);
 		if(publicacion.likes[i].usuario_id.toString().trim() === usuario._id.toString().trim()){
 			liked = 1;
+			liked_id = publicacion.likes[i]._id;
 		}else{
 			liked = 0;
 		}
@@ -153,11 +153,13 @@ function publicacion_like(publicacion, usuario){
 	
 	if( liked === 1){
 		publicacion.like = true;
-		publicacion.like_icon = "brand/like_icon_color.png";
+		publicacion.like_icon 	= "brand/like_icon_color.png";
+		publicacion.liked_id 	= liked_id;
 		console.log("ok");
 	}else{
 		publicacion.like = false;
-		publicacion.like_icon = "brand/like_icon.png";
+		publicacion.like_icon 	= "brand/like_icon.png";
+		publicacion.liked_id 	= liked_id;
 		console.log("not");
 	}
 	return publicacion;
@@ -668,7 +670,17 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
         else{
 			
 			for(var i = 0; i < result.length; i++){
-				result[i] = publicacion_like(result[i], req.body.data);
+				result[i] 			= publicacion_like(result[i], req.body.data);
+				if(req.body.data.location != undefined){
+					result[i].distancia = getDistanceFromLatLonInKm(
+						result[i].restaurante.ubicacion.latitude,
+						result[i].restaurante.ubicacion.longitude,
+						req.body.data.ubicacion.location[0].latitude,
+						req.body.data.ubicacion.location[0].longitude,
+					);
+				}else{
+					result[i].distancia = "Ubicación no disponible.";
+				}
 			}
 			
 			var res_data      = {};
