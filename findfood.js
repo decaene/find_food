@@ -633,6 +633,12 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
         { $lookup: { from: "Combo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.combo" } },
 		{ $lookup: { from: "Comentario_Restaurante", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.comentarios" } },
 		{ $lookup: { from: "Like", localField: "_id", foreignField: "publicacion_id", as: "likes" } },
+		{
+        "$project": {
+				"doc": $$ROOT,
+				"isUser": 1
+			}
+		}
     ]).toArray(function(err, result){ 
         if(err){
             var res_err      = {};
@@ -642,34 +648,6 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
             res.send(res_err);
         }
         else{
-			console.log(result);
-			for(var i = 0; i < result.length; i++){
-				var publicacion = result[i];
-				collection.find({ "usuario_id" : ObjectId(req.body.data.usuario_id), "publicacion_id" : ObjectId(result[i].id) })
-				.toArray(function(err, its_liked_by_user){ 
-					if(err){
-						var res_err      = {};
-						res_err.status   = "error";
-						res_err.error    = err;
-						res_err.message  = err;
-						res.send(res_err);
-					}
-					else{
-						if(its_liked_by_user.length > 0){
-							publicacion.like = true;
-							publicacion.like_icon = "brand/like_icon_color.png";
-							console.log("ok");
-						}else{
-							publicacion.like = false;
-							publicacion.like_icon = "brand/like_icon.png";
-							console.log("not");
-						}
-					}
-				});
-				console.log(publicacion);
-				result[i] = publicacion;
-			}
-            
 			var res_data      = {};
             res_data.status   = "success";
             res_data.message  = "Restaurantes";
