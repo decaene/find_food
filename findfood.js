@@ -111,6 +111,24 @@ app.use(function (req, res, next) {
 
 // FUNCTIONS 
 
+function getDistanceFromLatLonInKm (lat1,lon1,lat2,lon2) {
+    	var R = 6371; // Radius of the earth in km
+		var dLat = $scope.deg2rad(lat2-lat1);  // deg2rad below
+		var dLon = $scope.deg2rad(lon2-lon1); 
+		var a = 
+			Math.sin(dLat/2) * Math.sin(dLat/2) +
+			Math.cos($scope.deg2rad(lat1)) * Math.cos($scope.deg2rad(lat2)) * 
+			Math.sin(dLon/2) * Math.sin(dLon/2)
+			; 
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		var d = R * c; // Distance in km
+		return d;
+	}
+
+function  deg2rad (deg) {
+	return deg * (Math.PI/180)
+}
+
 function random_password() {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -624,7 +642,30 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
             res.send(res_err);
         }
         else{
-            var res_data      = {};
+			
+			for(var i = 0; i < result.length; i++){
+				collection.findOne({ "usuario_id" : ObjectId(req.body.data.usuario_id), "publicacion_id" : ObjectId(req.body.data.publicacion_id ) })
+				.toArray(function(err, its_liked_by_user){ 
+					if(err){
+						var res_err      = {};
+						res_err.status   = "error";
+						res_err.error    = err;
+						res_err.message  = err;
+						res.send(res_err);
+					}
+					else{
+						if(its_liked_by_user.length > 0){
+							result[i].like = true;
+							result[i].like_icon = "brand/like_icon_color.png";
+						}else{
+							result[i].like = false;
+							result[i].like_icon = "brand/like_icon.png";
+						}
+					}
+				});
+			}
+            
+			var res_data      = {};
             res_data.status   = "success";
             res_data.message  = "Restaurantes";
             res_data.data     = result;
