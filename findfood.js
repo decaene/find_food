@@ -851,8 +851,7 @@ router.post("/get_restaurantes_feed",function(req,res){
 router.post("/get_restaurante_visitas",function(req,res){
     var collection       =  datb.collection("Visita_Restaurante");
     collection.aggregate([
-		{ $match:  { "restaurante_id" : ObjectId(req.body.restaurante._id) } },
-		{ $lookup: { from: "Usuario", localField: "usuario_alta", foreignField: "_id", as: "usuario" } }
+		{ $match:  { "restaurante_id" : ObjectId(req.body.restaurante._id) } }
     ]).toArray(function(err, result){ 
         if(err){
             var res_err      = {};
@@ -1268,7 +1267,6 @@ router.post("/nuevo_comentario_publicacion",function(req,res){
 router.post("/nuevo_visita",function(req,res){
     var collection           		=  datb.collection('Visita_Restaurante');
 	req.body.data.restaurante_id 	=  ObjectId(req.body.data.restaurante_id);
-	req.body.data.usuario_alta 		=  ObjectId(req.body.data.usuario_alta);
     collection.insert(req.body.data, function(err, result) {
         if(err){
             var res_err      = {};
