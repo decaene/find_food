@@ -1197,6 +1197,26 @@ router.post("/nuevo_comentario_publicacion",function(req,res){
     });
 });
 
+router.post("/nuevo_no_ver_mas",function(req,res){
+    var collection           		=  datb.collection('Publicacion_No_Ver_Mas');
+	req.body.data.publicacion_id 	=  ObjectId(req.body.data.publicacion_id);
+	req.body.data.usuario_alta 		=  ObjectId(req.body.data.usuario_alta);
+    collection.insert(req.body.data, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            result.status  = "success";
+			result.message = "No veras mas este contenido :)";
+			res.send(result);
+        }
+    });
+});
+
 router.post("/nuevo_like",function(req,res){
     var collection    =  datb.collection('Like');
 	req.body.like.usuario_id 	 =  ObjectId(req.body.like.usuario_id);
