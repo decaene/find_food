@@ -144,7 +144,7 @@ function publicacion_like(publicacion, usuario){
 	for( var i = 0; i<publicacion.likes.length; i++){
 		console.log(publicacion.likes[i].usuario_id);
 		console.log(usuario._id);
-		if(publicacion.likes[i].usuario_id === usuario._id){
+		if(publicacion.likes[i].usuario_id.toString().trim() === usuario._id.toString().trim()){
 			liked = 1;
 		}else{
 			liked = 0;
