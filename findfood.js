@@ -644,8 +644,7 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
         else{
 			console.log(result);
 			for(var i = 0; i < result.length; i++){
-				console.log("ind");
-				console.log(result[i]);
+				var publicacion = result[i];
 				collection.find({ "usuario_id" : ObjectId(req.body.data.usuario_id), "publicacion_id" : ObjectId(result[i].id) })
 				.toArray(function(err, its_liked_by_user){ 
 					if(err){
@@ -658,14 +657,15 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
 					else{
 						console.log(result[i]);
 						if(its_liked_by_user.length > 0){
-							result[i].like = true;
-							result[i].like_icon = "brand/like_icon_color.png";
+							publicacion.like = true;
+							publicacion.like_icon = "brand/like_icon_color.png";
 						}else{
-							result[i].like = false;
-							result[i].like_icon = "brand/like_icon.png";
+							publicacion.like = false;
+							publicacion.like_icon = "brand/like_icon.png";
 						}
 					}
 				});
+				result[i] = publicacion;
 			}
             
 			var res_data      = {};
