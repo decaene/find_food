@@ -142,6 +142,8 @@ function random_password() {
 function publicacion_like(publicacion, usuario){
 	var liked = 0;
 	for( var i = 0; i<publicacion.likes.length; i++){
+		console.log(publicacion.likes[i].usuario_id);
+		console.log(usuario._id);
 		if(publicacion.likes[i].usuario_id === usuario._id){
 			liked = 1;
 		}else{
