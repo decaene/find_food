@@ -163,6 +163,24 @@ function publicacion_like(publicacion, usuario){
 	return publicacion;
 }
 
+function publicacion_no_ver_mas(publicacion, usuario){
+	var no_ver_mas = 0;
+	for( var i = 0; i<publicacion.no_ver_mas.length; i++){
+		if(publicacion.no_ver_mas[i].usuario_id.toString().trim() === usuario._id.toString().trim()){
+			no_ver_mas = 1;
+		}else{
+			no_ver_mas = 0;
+		}
+	}
+	
+	if( no_ver_mas === 1){
+		publicacion.no_ver_mas_bol = true;
+	}else{
+		publicacion.no_ver_mas_bol = false;
+	}
+	return publicacion;
+}
+
 // FUNCTIONS
 
 // Database Mongo Connection //
@@ -677,6 +695,7 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
         { $lookup: { from: "Combo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.combo" } },
 		{ $lookup: { from: "Comentario_Restaurante", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.comentarios" } },
 		{ $lookup: { from: "Like", localField: "_id", foreignField: "publicacion_id", as: "likes" } },
+		{ $lookup: { from: "Publicacion_No_Ver_Mas", localField: "_id", foreignField: "publicacion_id", as: "no_ver_mas" } }
     ]).toArray(function(err, result){ 
         if(err){
             var res_err      = {};
@@ -689,6 +708,7 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
 			
 			for(var i = 0; i < result.length; i++){
 				result[i] 			= publicacion_like(result[i], req.body.data);
+				result[i]			= publicacion_no_ver_mas(result[i], req.body.data);
 				if(req.body.data.location != undefined){
 					result[i].distancia = getDistanceFromLatLonInKm(
 						result[i].restaurante.ubicacion.latitude,
@@ -763,6 +783,15 @@ router.post("/get_restaurantes_publicaciones_by_publicacion_id",function(req,res
     collection.aggregate([
 		{ $match:  { "_id" : ObjectId(req.body.data._id) } },
 		{ $lookup: { from: "Restaurante", localField: "restaurante_id", foreignField: "_id", as: "restaurante" } },
+		{ $lookup: { from: "Comentario_Publicacion", localField: "_id", foreignField: "publicacion_id", as: "comentarios" } },
+        { $unwind: { path: "$restaurante"  } },
+        { $lookup: { from: "Categoria_Platillo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.categorias" } },
+        { $lookup: { from: "Menu", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.menu" } },
+        { $lookup: { from: "Oferta", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.oferta" } },
+        { $lookup: { from: "Combo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.combo" } },
+		{ $lookup: { from: "Comentario_Restaurante", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.comentarios" } },
+		{ $lookup: { from: "Like", localField: "_id", foreignField: "publicacion_id", as: "likes" } },
+		{ $lookup: { from: "Publicacion_No_Ver_Mas", localField: "_id", foreignField: "publicacion_id", as: "no_ver_mas" } }
     ]).toArray(function(err, result){ 
         if(err){
             var res_err      = {};
@@ -772,6 +801,19 @@ router.post("/get_restaurantes_publicaciones_by_publicacion_id",function(req,res
             res.send(res_err);
         }
         else{
+			
+			result[0]	= publicacion_like(result[0], req.body.usuario);
+			if(req.body.usuario.location != undefined){
+					result[0].distancia = getDistanceFromLatLonInKm(
+					result[0].restaurante.ubicacion.latitude,
+					result[0].restaurante.ubicacion.longitude,
+					req.body.usuario.location[0].latitude,
+					req.body.usuario.location[0].longitude,
+				);
+			}else{
+				result[0].distancia = "Ubicación no disponible.";
+			}
+			
             var res_data      = {};
             res_data.status   = "success";
             res_data.message  = "Publicación individual";
