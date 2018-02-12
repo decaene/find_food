@@ -1217,6 +1217,27 @@ router.post("/nuevo_like",function(req,res){
     });
 });
 
+router.post("/nuevo_denuncia",function(req,res){
+    var collection    =  datb.collection('Denuncia');
+	req.body.denuncia.usuario_id 	 	 =  ObjectId(req.body.denuncia.usuario_id);
+	req.body.denuncia.publicacion_id 	 =  ObjectId(req.body.denuncia.publicacion_id);
+	req.body.denuncia.denuncia_opcion_id =  ObjectId(req.body.denuncia.denuncia_opcion_id);
+    collection.insert(req.body.denuncia, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            result.status  = "success";
+			result.message = "¡Denuncia realizada, valoraremos tu petición, gracias!";
+			res.send(result);
+        }
+    });
+});
+
 router.post("/nuevo_ubicacion",function(req,res){
     var collection    =  datb.collection('Ubicacion');
     req.body.ubicacion.usuario_id     =  ObjectId(req.body.ubicacion.usuario_id);
