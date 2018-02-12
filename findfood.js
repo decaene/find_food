@@ -694,6 +694,7 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
         { $lookup: { from: "Oferta", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.oferta" } },
         { $lookup: { from: "Combo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.combo" } },
 		{ $lookup: { from: "Comentario_Restaurante", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.comentarios" } },
+		{ $lookup: { from: "Visita_Restaurante", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.visitas" } },
 		{ $lookup: { from: "Like", localField: "_id", foreignField: "publicacion_id", as: "likes" } },
 		{ $lookup: { from: "Publicacion_No_Ver_Mas", localField: "_id", foreignField: "publicacion_id", as: "no_ver_mas" } }
     ]).toArray(function(err, result){ 
@@ -790,6 +791,7 @@ router.post("/get_restaurantes_publicaciones_by_publicacion_id",function(req,res
         { $lookup: { from: "Oferta", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.oferta" } },
         { $lookup: { from: "Combo", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.combo" } },
 		{ $lookup: { from: "Comentario_Restaurante", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.comentarios" } },
+		{ $lookup: { from: "Visita_Restaurante", localField: "restaurante._id", foreignField: "restaurante_id", as: "restaurante.visitas" } },
 		{ $lookup: { from: "Like", localField: "_id", foreignField: "publicacion_id", as: "likes" } },
 		{ $lookup: { from: "Publicacion_No_Ver_Mas", localField: "_id", foreignField: "publicacion_id", as: "no_ver_mas" } }
     ]).toArray(function(err, result){ 
