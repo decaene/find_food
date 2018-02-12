@@ -671,17 +671,13 @@ router.post("/get_restaurantes_publicaciones",function(req,res){
 			
 			for(var i = 0; i < result.length; i++){
 				result[i] 			= publicacion_like(result[i], req.body.data);
-				if(req.body.data.ubicacion != undefined){
-					if(req.body.data.ubicacion.location != undefined){
-						result[i].distancia = getDistanceFromLatLonInKm(
-							result[i].restaurante.ubicacion.latitude,
-							result[i].restaurante.ubicacion.longitude,
-							req.body.data.ubicacion.location[0].latitude,
-							req.body.data.ubicacion.location[0].longitude,
-						);
-					}else{
-						result[i].distancia = "Ubicación no disponible.";
-					}
+				if(req.body.data.location != undefined){
+					result[i].distancia = getDistanceFromLatLonInKm(
+						result[i].restaurante.ubicacion.latitude,
+						result[i].restaurante.ubicacion.longitude,
+						req.body.data.location[0].latitude,
+						req.body.data.location[0].longitude,
+					);
 				}else{
 					result[i].distancia = "Ubicación no disponible.";
 				}
