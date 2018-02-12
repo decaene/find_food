@@ -803,7 +803,7 @@ router.post("/get_restaurantes_publicaciones_by_publicacion_id",function(req,res
         else{
 			
 			result[0]	= publicacion_like(result[0], req.body.usuario);
-			result[i]	= publicacion_no_ver_mas(result[0], req.body.data);
+			result[0]	= publicacion_no_ver_mas(result[0], req.body.data);
 			if(req.body.usuario.location != undefined){
 					result[0].distancia = getDistanceFromLatLonInKm(
 					result[0].restaurante.ubicacion.latitude,
