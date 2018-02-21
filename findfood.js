@@ -1092,7 +1092,7 @@ router.post("/update_user_password",function(req,res){
     var collection           		=  datb.collection('Usuario');
     var user_id           			=  ObjectId(req.body.data._id);
     collection.update(
-		{ '_id' : usuario_id }, 
+		{ '_id' : user_id }, 
         { $set: { 'contrasena' : req.body.data.contrasena } }, 
 		function(err, result){  
 			if(err){
