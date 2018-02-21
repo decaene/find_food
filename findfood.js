@@ -34,6 +34,7 @@ app.use('/publicaciones', express.static('publicaciones'));
 app.use('/restaurantes_cover', express.static('restaurantes_cover'));
 app.use('/restaurantes_documentos', express.static('restaurantes_documentos'));
 app.use('/combos', express.static('combos'));
+app.use('/usuario', express.static('usuario'));
 
 var readHTMLFile = function(path, callback) {
     fs.readFile(path, {encoding: 'utf-8'}, function (err, html) {
@@ -1106,6 +1107,60 @@ router.post("/update_user_password",function(req,res){
 				var res_err      = {};
 				res_err.status   = "success";
 				res_err.message  = "Actualizaste tu contraseña";
+				res_err.result	 = result;
+				res.send(res_err);
+			}
+	});
+});
+
+router.post("/update_perfil_usuario",function(req,res){
+    var collection           		=  datb.collection('Usuario');
+    var user_id           			=  ObjectId(req.body.data._id);
+    collection.update(
+		{ '_id' : user_id }, 
+        { $set: { 'nombre' : req.body.data.nombre, 'apellido' : req.body.data.apellido, 'email' : req.body.data.email, 'telefono' : req.body.data.telefono } }, 
+		function(err, result){  
+			if(err){
+				var res_err      = {};
+				res_err.status   = "error";
+				res_err.error    = err;
+				res_err.message  = err;
+				res.send(res_err);
+			}
+			else{
+				var res_err      = {};
+				res_err.status   = "success";
+				res_err.message  = "Actualizaste tu perfil";
+				res_err.result	 = result;
+				res.send(res_err);
+			}
+	});
+});
+
+router.post("/update_foto_usuario",function(req,res){
+    var collection           =  datb.collection('Usuario');
+    var user_id           	 =  ObjectId(req.body.data._id);
+	var foto_usuario     	 =  req.body.data.foto;
+	
+	var data = foto_usuario.replace(/^data:image\/\w+;base64,/, "");
+	var buf = new Buffer(data, 'base64');
+	fs.writeFile('usuario/'+req.body.data._id+'_foto.png', buf);
+	
+    collection.update(
+		{ '_id' : user_id }, 
+        { $set: { 'foto' :  'usuario/'+req.body.data._id+'_foto.png' } }, 
+		function(err, result){  
+			if(err){
+				var res_err      = {};
+				res_err.status   = "error";
+				res_err.error    = err;
+				res_err.message  = err;
+				res.send(res_err);
+			}
+			else{
+				var res_err      = {};
+				res_err.status   = "success";
+				res_err.message  = "Actualizaste tu foto";
 				res_err.result	 = result;
 				res.send(res_err);
 			}
