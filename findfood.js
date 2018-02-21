@@ -879,13 +879,13 @@ router.post("/get_restaurantes_publicaciones_by_restaurante_id",function(req,res
 router.post("/get_restaurantes_feed",function(req,res){
     var collection       =  datb.collection("Restaurante");
     collection.aggregate([
-        { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "menu" } }
-		{ $lookup: { from: "Categoria_Platillo", localField: "_id", foreignField: "restaurante_id", as: "restaurante.categorias" } },
-        { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "restaurante.menu" } },
-        { $lookup: { from: "Oferta", localField: "_id", foreignField: "restaurante_id", as: "restaurante.oferta" } },
-        { $lookup: { from: "Combo", localField: "_id", foreignField: "restaurante_id", as: "restaurante.combo" } },
-		{ $lookup: { from: "Comentario_Restaurante", localField: "_id", foreignField: "restaurante_id", as: "restaurante.comentarios" } },
-		{ $lookup: { from: "Visita_Restaurante", localField: "_id", foreignField: "restaurante_id", as: "restaurante.visitas" } }
+        { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "menu" } },
+		{ $lookup: { from: "Categoria_Platillo", localField: "_id", foreignField: "restaurante_id", as: "categorias" } },
+        { $lookup: { from: "Menu", localField: "_id", foreignField: "restaurante_id", as: "menu" } },
+        { $lookup: { from: "Oferta", localField: "_id", foreignField: "restaurante_id", as: "oferta" } },
+        { $lookup: { from: "Combo", localField: "_id", foreignField: "restaurante_id", as: "combo" } },
+		{ $lookup: { from: "Comentario_Restaurante", localField: "_id", foreignField: "restaurante_id", as: "comentarios" } },
+		{ $lookup: { from: "Visita_Restaurante", localField: "_id", foreignField: "restaurante_id", as: "visitas" } }
     ]).toArray(function(err, result){ 
         if(err){
             var res_err      = {};
