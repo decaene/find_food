@@ -1160,6 +1160,7 @@ router.post("/update_foto_usuario",function(req,res){
 			else{
 				var res_err      = {};
 				res_err.status   = "success";
+				res_err.foto   	 = 'usuario/'+req.body.data._id+'_foto.png'
 				res_err.message  = "Actualizaste tu foto";
 				res_err.result	 = result;
 				res.send(res_err);
