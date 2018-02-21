@@ -1103,9 +1103,11 @@ router.post("/update_user_password",function(req,res){
 				res.send(res_err);
 			}
 			else{
-				result.status  = "success";
-				result.message = "Actualizaste tu contraseña";
-				res.send(result);
+				var res_err      = {};
+				res_err.status   = "success";
+				res_err.message  = "Actualizaste tu contraseña";
+				res_err.result	 = result;
+				res.send(res_err);
 			}
 	});
 });
