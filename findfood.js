@@ -1088,6 +1088,28 @@ router.post("/update_user_preferencias",function(req,res){
 	});
 });
 
+router.post("/update_user_password",function(req,res){
+    var collection           		=  datb.collection('Usuario');
+    var user_id           			=  ObjectId(req.body.data._id);
+    collection.update(
+		{ '_id' : usuario_id }, 
+        { $set: { 'contrasena' : req.body.data.contrasena } }, 
+		function(err, result){  
+			if(err){
+				var res_err      = {};
+				res_err.status   = "error";
+				res_err.error    = err;
+				res_err.message  = err;
+				res.send(res_err);
+			}
+			else{
+				result.status  = "success";
+				result.message = "Actualizaste tu contraseña";
+				res.send(result);
+			}
+	});
+});
+
 router.post("/update_user_location",function(req,res){
     var collection           		=  datb.collection('Usuario');
     var user_id           			=  ObjectId(req.body.data._id);
