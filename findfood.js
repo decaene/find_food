@@ -404,6 +404,29 @@ router.post("/autenticacion",function(req,res){
     });
 });
 
+router.post("/get_pedidos_usuario",function(req,res){
+	var user_id           			=  ObjectId(req.body.usuario._id);
+    var collection      = datb.collection('Pedido');
+    collection.aggregate([
+        { $match : { "_id" : user_id } },
+		{ $lookup: { from: "Pedido",  localField: "_id", foreignField: "usuario_id", as: "pedidos" } }
+    ]).toArray(function(err, result){  
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }else{
+            var res_data      = {};
+            res_data.status   = "success";
+            res_data.message  = "Pedidos";
+            res_data.data     = result;
+            res.send(res_data);
+        }
+    });
+});
+
 router.post("/get_tipo_comida",function(req,res){
     var collection      = datb.collection('Tipo_Comida');
     collection.aggregate([
@@ -1495,6 +1518,26 @@ router.post("/nuevo_ubicacion",function(req,res){
         else{
             result.status  = "success";
             result.message = "Ubicación agregada :)";
+            res.send(result);
+        }
+    });
+});
+
+router.post("/nuevo_pedido",function(req,res){
+    var collection    =  datb.collection('Pedido');
+    req.body.pedido.usuario_id	 	=  ObjectId(req.body.pedido.usuario_id);
+	req.body.pedido.restaurante_id	=  ObjectId(req.body.pedido.restaurante_id);
+    collection.insert(req.body.pedido, function(err, result) {
+        if(err){
+            var res_err      = {};
+            res_err.status   = "error";
+            res_err.error    = err;
+            res_err.message  = err;
+            res.send(res_err);
+        }
+        else{
+            result.status  = "success";
+            result.message = "Nuevo pedido :)";
             res.send(result);
         }
     });
