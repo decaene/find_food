@@ -1,27 +1,23 @@
 
 
 
-var express     =   require("express");
-var app         =   express();
-var bodyParser  =   require("body-parser");
-var router      =   express.Router();
-var mongoose    =   require('mongoose');
-var MongoClient =   require('mongodb').MongoClient
-    , format    =   require('util').format;
-var ObjectId    =   require('mongodb').ObjectId; 
-var path        =   require('path');
-var multer      =   require('multer');
-var fs          =   require('fs');
-var bodyParser  =   require('body-parser');
-var http 		= 	require('http');
-// var dateFormat  =   require('dateformat');
-// var moment      =   require('moment');
-// var QRCode      =   require('qrcode');
-// var gcm         =   require('node-gcm');
-// var apn         =   require('apn');
+var express     	=   require("express");
+var app         	=   express();
+var bodyParser  	=   require("body-parser");
+var router      	=   express.Router();
+var mongoose    	=   require('mongoose');
+var MongoClient 	=   require('mongodb').MongoClient
+    , format    	=   require('util').format;
+var ObjectId    	=   require('mongodb').ObjectId; 
+var path        	=   require('path');
+var multer      	=   require('multer');
+var fs          	=   require('fs');
+var bodyParser  	=   require('body-parser');
+var http 			= 	require('http');
 var nodemailer  	=   require('nodemailer');
 var smtpTransport 	= 	require('nodemailer-smtp-transport');
 var handlebars 	  	= 	require('handlebars');
+var socket			=   require('socket.io')(http, { path: '/findfood/socket.io'});
 
 app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
@@ -63,11 +59,12 @@ var server = app.listen(3003, () => {
     console.log('Find food en:3003');
 });
 
-var io = require('socket.io')(server);
+var io = socket.listen(server);
 
 // IO SOCKETS
 
 // Set socket.io listeners.
+io.of('/passmovilidad/');
 io.on('connection', (socket) => {
     console.log('Usuario esta viendo FindFood');
 
